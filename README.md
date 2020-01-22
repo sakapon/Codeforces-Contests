@@ -1,2 +1,4 @@
-# Codeforces-Contests
-For Codeforces contests.
+# Codeforces Contests
+For [Codeforces](https://codeforces.com/) contests.
+
+May the Codeforces be with you.
