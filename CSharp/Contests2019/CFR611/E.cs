@@ -5,14 +5,21 @@ class E
 {
 	static void Main()
 	{
-		Console.ReadLine();
-		var s = Console.ReadLine();
 		var n = int.Parse(Console.ReadLine());
 		var a = Console.ReadLine().Split().Select(int.Parse).ToArray();
-		Func<int[]> read = () => Console.ReadLine().Split().Select(int.Parse).ToArray();
-		var h = read();
-		var ps = new int[h[0]].Select(_ => read()).ToArray();
+		Array.Sort(a);
 
-		Console.WriteLine(string.Join(" ", a));
+		var m = new bool[n + 2];
+		var M = new bool[n + 2];
+
+		foreach (var i in a)
+		{
+			if (Enumerable.Range(i - 1, 3).All(j => !m[j]))
+				m[i + 1] = true;
+
+			for (int j = i - 1; j <= i + 1; j++)
+				if (!M[j]) { M[j] = true; break; }
+		}
+		Console.WriteLine($"{m.Count(x => x)} {M.Count(x => x)}");
 	}
 }
