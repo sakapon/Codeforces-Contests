@@ -6,8 +6,9 @@ class D
 {
 	struct P
 	{
-		public int p, x, d;
-		public P(int _p, int _x, int _d) { p = _p; x = _x; d = _d; }
+		public int x, d, v;
+		public P(int _x, int _d, int _v) { x = _x; d = _d; v = _v; }
+		public P Next => new P(x + v, d + 1, v);
 	}
 
 	static void Main()
@@ -17,22 +18,19 @@ class D
 		int n = z[0], m = z[1];
 		var a = read();
 
-		var u = new HashSet<int>(a);
-		var q = new Queue<P>(a.Select(x => new P(x, x, -1)).Concat(a.Select(x => new P(x, x, 1))));
+		var u = a.ToDictionary(x => x, x => 0L);
+		var q = new Queue<P>(a.SelectMany(x => new[] { new P(x, 0, -1), new P(x, 0, 1) }));
 		var r = new List<int>();
-		var sum = 0L;
 
 		while (r.Count < m)
 		{
-			var p = q.Dequeue();
-			var x = new P(p.p + p.d, p.x, p.d);
-			if (u.Contains(x.p)) continue;
-			u.Add(x.p);
+			var x = q.Dequeue().Next;
+			if (u.ContainsKey(x.x)) continue;
+			u[x.x] = x.d;
 			q.Enqueue(x);
-			r.Add(x.p);
-			sum += x.d * (x.p - x.x);
+			r.Add(x.x);
 		}
-		Console.WriteLine(sum);
+		Console.WriteLine(u.Sum(p => p.Value));
 		Console.WriteLine(string.Join(" ", r));
 	}
 }
