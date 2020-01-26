@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 class C
@@ -7,10 +8,9 @@ class C
 	{
 		Console.ReadLine();
 		var s = Console.ReadLine();
-		var n = int.Parse(Console.ReadLine());
-		var h = Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-		var ps = new int[n].Select(_ => Console.ReadLine().Split().Select(int.Parse).ToArray()).ToArray();
+		var c = new HashSet<char>(Console.ReadLine().Replace(" ", ""));
 
-		Console.WriteLine(string.Join(" ", h));
+		s = new string(s.Select(x => c.Contains(x) ? '?' : ' ').ToArray());
+		Console.WriteLine(s.Split().Select(x => x.Length).Sum(x => (long)x * (x + 1) / 2));
 	}
 }
