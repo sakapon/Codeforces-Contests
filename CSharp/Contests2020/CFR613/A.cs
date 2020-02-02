@@ -2,10 +2,5 @@
 
 class A
 {
-	static void Main()
-	{
-		var n = int.Parse(Console.ReadLine());
-		Console.ReadLine();
-		Console.WriteLine(n + 1);
-	}
+	static void Main() => Console.WriteLine(int.Parse(Console.ReadLine()) + 1);
 }
