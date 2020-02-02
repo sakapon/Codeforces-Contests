@@ -13,23 +13,24 @@ class B
 		for (int i = 0; i < n; i++) s[i + 1] = s[i] + a[i];
 
 		var r = 0;
-		var M = Array.BinarySearch(s, m);
-		if (M < 0) M = ~M - 1;
+		var M = Search(s, m);
 
-		for (int i = 0; i < n; i++)
+		for (int j, i = 0; i < n; i++)
 		{
-			var t = Array.BinarySearch(s, m + a[i]);
-			if (t < 0) t = ~t - 1;
-			if (t - 1 < i) continue;
-			t--;
+			if ((j = Search(s, m + a[i]) - 1) < i) break;
 
-			if (t > M)
+			if (j > M)
 			{
 				r = i + 1;
-				M = t;
+				M = j;
 			}
 		}
-
 		return r;
+	}
+
+	static int Search(long[] s, int v)
+	{
+		var i = Array.BinarySearch(s, v);
+		return i >= 0 ? i : ~i - 1;
 	}
 }

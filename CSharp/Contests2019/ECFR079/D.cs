@@ -9,14 +9,12 @@ class D
 		var n = int.Parse(Console.ReadLine());
 		var a = new int[n].Select(_ => Console.ReadLine().Split().Skip(1).Select(int.Parse).ToArray()).ToArray();
 
-		var items_kids = a.SelectMany((g, i) => g.Select(x => (x: x, i: i))).ToLookup(_ => _.x, _ => _.i);
-		var inv = a.Select(x => ((MInt)x.Length).Inv()).ToArray();
-		var s = a.SelectMany(x => x).GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+		var items_kids = a.SelectMany((g, i) => g.Select(x => (x: x, i: i))).GroupBy(_ => _.x, _ => _.i).ToDictionary(g => g.Key, g => g.ToArray());
+		var kids_inv = Array.ConvertAll(a, g => (MInt)1 / g.Length);
 
 		MInt t = 0;
-		var items = items_kids.Select(g => g.Key).ToArray();
-		foreach (var j in items)
-			t += items_kids[j].Select(i => inv[i]).Aggregate((x, y) => x + y) * s[j];
+		foreach (var p in items_kids)
+			t += items_kids[p.Key].Select(i => kids_inv[i]).Aggregate((x, y) => x + y) * p.Value.Length;
 		Console.WriteLine(t / n / n);
 	}
 }
@@ -28,8 +26,6 @@ struct MInt
 	public MInt(long v) { V = (v %= M) < 0 ? v + M : v; }
 
 	public static implicit operator MInt(long v) => new MInt(v);
-	public static MInt operator +(MInt x) => x;
-	public static MInt operator -(MInt x) => -x.V;
 	public static MInt operator +(MInt x, MInt y) => x.V + y.V;
 	public static MInt operator -(MInt x, MInt y) => x.V - y.V;
 	public static MInt operator *(MInt x, MInt y) => x.V * y.V;
