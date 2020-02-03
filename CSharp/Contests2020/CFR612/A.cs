@@ -8,12 +8,7 @@ class A
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
-
-		var r = 0L;
-		return r;
+		Console.ReadLine();
+		return Console.ReadLine().TrimStart('P').Split('A').Max(s => s.Length);
 	}
 }
