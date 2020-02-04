@@ -12,13 +12,14 @@ class D
 		var p2 = Enumerable.Range(0, m + 1).Select(i => 1 << i).ToArray();
 
 		int ri = 1, rj = 1;
-		var rm = Enumerable.Range(0, m).ToArray();
 		var M = Last(0, 1000000000, x =>
 		{
 			var u = new int[p2[m]];
 			for (int i = 0; i < n; i++)
 			{
-				var f = rm.Select(j => a[i][j] >= x ? p2[j] : 0).Aggregate((y, z) => y | z);
+				var f = 0;
+				for (int j = 0; j < m; j++)
+					if (a[i][j] >= x) f |= p2[j];
 				u[f] = i + 1;
 			}
 
