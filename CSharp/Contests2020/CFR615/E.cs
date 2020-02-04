@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Linq;
 
 class E
 {
-	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
+	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static void Main()
 	{
 		var h = Read();
 		int n = h[0], m = h[1];
-		var a = new int[n].Select(_ => Read()).ToArray();
+		var a = Array.ConvertAll(new int[n], _ => Read());
 
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < m; j++)
@@ -17,13 +16,17 @@ class E
 				a[i][j] = rem == 0 && 0 <= q && q < n ? Mod(q - i, n) : -1;
 			}
 
-		var r = 0L;
+		var r = 0;
 		for (int j = 0; j < m; j++)
 		{
-			var gs = Enumerable.Range(0, n).Select(i => a[i][j]).Where(x => x != -1).GroupBy(x => x);
+			var u = new int[n];
+			for (int i = 0; i < n; i++)
+				if (a[i][j] != -1)
+					++u[a[i][j]];
+
 			var min = n;
-			foreach (var g in gs)
-				min = Math.Min(min, (n - g.Key) % n + n - g.Count());
+			for (int i = 0; i < n; i++)
+				min = Math.Min(min, (n - i) % n + n - u[i]);
 			r += min;
 		}
 		Console.WriteLine(r);
