@@ -28,15 +28,9 @@ class D
 
 	static List<int> Dfs(int p, int p0)
 	{
-		List<int> l = null;
+		var l = new List<int>();
 		foreach (var p2 in map[p])
-		{
-			if (p2 == p0) continue;
-			if (l == null) l = Dfs(p2, p);
-			else l.AddRange(Dfs(p2, p));
-		}
-
-		if (l == null) l = new List<int>();
+			l.AddRange(Dfs(p2, p));
 		l.Insert(pcs[p - 1][1], p);
 		return l;
 	}
