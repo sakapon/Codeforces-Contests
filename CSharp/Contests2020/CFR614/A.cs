@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 class A
@@ -8,12 +9,14 @@ class A
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
 		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		int n = h[0], s = h[1];
+		var a = new HashSet<int>(Read());
 
-		var r = 0L;
-		return r;
+		for (int t, i = 0; ; i++)
+		{
+			if ((t = s - i) > 0 && !a.Contains(t)) return i;
+			if ((t = s + i) <= n && !a.Contains(t)) return i;
+		}
 	}
 }
