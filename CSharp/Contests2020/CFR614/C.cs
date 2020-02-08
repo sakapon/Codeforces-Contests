@@ -8,26 +8,23 @@ class C
 	{
 		var h = Read();
 		var n = h[0];
-		var qs = new int[h[1]].Select(_ => Read()).ToArray();
+		var q = new int[h[1]].Select(_ => Read());
 
 		var c = new bool[3, n + 2];
 		var s = 0;
-		foreach (var q in qs)
+
+		Func<int[], bool> toggle = p =>
 		{
-			var f = c[q[0], q[1]];
-			c[q[0], q[1]] = !f;
-			var i = q[0] == 1 ? 2 : 1;
-			if (f)
-			{
-				for (int j = q[1] - 1; j <= q[1] + 1; j++)
-					if (c[i, j]) --s;
-			}
-			else
-			{
-				for (int j = q[1] - 1; j <= q[1] + 1; j++)
-					if (c[i, j]) ++s;
-			}
-			Console.WriteLine(s == 0 ? "Yes" : "No");
-		}
+			var f = c[p[0], p[1]];
+			c[p[0], p[1]] = !f;
+
+			var i = p[0] == 1 ? 2 : 1;
+			for (int j = p[1] - 1; j <= p[1] + 1; j++)
+				if (c[i, j])
+					if (f) --s;
+					else ++s;
+			return s == 0;
+		};
+		Console.WriteLine(string.Join("\n", q.Select(p => toggle(p) ? "Yes" : "No")));
 	}
 }

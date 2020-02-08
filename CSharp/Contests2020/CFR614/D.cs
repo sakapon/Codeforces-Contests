@@ -28,11 +28,9 @@ class D
 		var M = 0;
 		for (int i = 0; i < ps.Count; i++)
 		{
-			var t0 = t - Norm(sp, ps[i]);
-			if (t0 < 0) continue;
-
-			M = Math.Max(M, Enumerable.Range(0, i).Reverse().TakeWhile(j => s[i] - s[j] <= t0).Count() + 1);
-			M = Math.Max(M, Enumerable.Range(i + 1, ps.Count - 1 - i).TakeWhile(j => s[j] - s[i] <= t0).Count() + 1);
+			var t0 = Norm(sp, ps[i]);
+			M = Math.Max(M, Enumerable.Range(0, i + 1).Reverse().TakeWhile(j => t0 + s[i] - s[j] <= t).Count());
+			M = Math.Max(M, Enumerable.Range(i, ps.Count - i).TakeWhile(j => t0 + s[j] - s[i] <= t).Count());
 		}
 		Console.WriteLine(M);
 	}
