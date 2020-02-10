@@ -10,27 +10,16 @@ class C
 		var n = int.Parse(Console.ReadLine());
 		var a = Read();
 
-		var indexes = Enumerable.Repeat(-1, 30).ToArray();
-		for (int k = 0; k < 30; ++k)
-		{
+		var i_max = -1;
+		for (int k = 29; k >= 0 && i_max == -1; --k)
 			for (int i = 0; i < n; ++i)
 			{
 				if ((a[i] & p2[k]) == 0) continue;
-				if (indexes[k] != -1) { indexes[k] = -1; break; }
-				indexes[k] = i;
+				if (i_max != -1) { i_max = -1; break; }
+				i_max = i;
 			}
-		}
 
-		var o = indexes
-			.Select((i, k) => new { i, k })
-			.Where(_ => _.i != -1)
-			.GroupBy(_ => _.i, _ => _.k)
-			.Select(g => new { i = g.Key, v = g.Sum(k => p2[k]) })
-			.OrderBy(_ => -_.v)
-			.ToArray();
-		var mi = o.Length == 0 ? 0 : o[0].i;
-
-		Swap(a, 0, mi);
+		if (i_max != -1) Swap(a, 0, i_max);
 		Console.WriteLine(string.Join(" ", a));
 	}
 
