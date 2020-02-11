@@ -9,8 +9,7 @@ class B
 	static long Solve()
 	{
 		var h = Read();
-		int n = h[0];
-		long x = h[1];
+		int n = h[0], x = h[1];
 		var s = Console.ReadLine();
 
 		var t = new int[n + 1];
@@ -25,17 +24,8 @@ class B
 			var r = 0;
 			for (int i = 0; i < n; i++)
 			{
-				if (t[i] == x)
-				{
-					r++;
-				}
-				else
-				{
-					if ((x - t[i]) * t[n] > 0 && (x - t[i]) % t[n] == 0)
-					{
-						r++;
-					}
-				}
+				var q = Math.DivRem(x - t[i], t[n], out var rem);
+				if (rem == 0 && q >= 0) r++;
 			}
 			return r;
 		}
