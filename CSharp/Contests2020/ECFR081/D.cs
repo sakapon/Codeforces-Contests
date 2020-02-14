@@ -12,36 +12,20 @@ class D
 		var h = Read();
 		long a = h[0], m = h[1];
 
-		var gcd = Gcd(a, m);
-
-		var divs = Divisors(m);
-		var d = new Dictionary<long, long>();
-
-		for (int i = divs.Length - 1; i >= 0; i--)
-		{
-			d[divs[i]] = m / divs[i];
-
-			for (int j = i + 1; j < divs.Length; j++)
-			{
-				if (divs[j] % divs[i] == 0) d[divs[i]] -= d[divs[j]];
-			}
-		}
-
-		return d[gcd];
+		m /= Gcd(a, m);
+		return Factorize(m).Distinct().Aggregate(m, (x, p) => x / p * (p - 1));
 	}
 
 	static long Gcd(long x, long y) { for (long r; (r = x % y) > 0; x = y, y = r) ; return y; }
 
-	static long[] Divisors(long v)
+	static long[] Factorize(long n)
 	{
-		var d = new List<long>();
-		var c = 0;
-		for (long i = 1, j, rv = (long)Math.Sqrt(v); i <= rv; i++)
-			if (v % i == 0)
-			{
-				d.Insert(c, i);
-				if ((j = v / i) != i) d.Insert(++c, j);
-			}
-		return d.ToArray();
+		long rn = (long)Math.Ceiling(Math.Sqrt(n)), x = 2;
+		var r = new List<long>();
+		while (n % x == 0) { r.Add(x); n /= x; }
+		for (x++; x <= rn && n > 1; x += 2)
+			while (n % x == 0) { r.Add(x); n /= x; }
+		if (n > 1) r.Add(n);
+		return r.ToArray();
 	}
 }
