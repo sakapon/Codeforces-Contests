@@ -6,14 +6,12 @@ class A
 	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 
-	static long Solve()
+	static string Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		var a = Console.ReadLine();
+		var b = Console.ReadLine();
+		var c = Console.ReadLine();
 
-		var r = 0L;
-		return r;
+		return Enumerable.Range(0, a.Length).All(i => a[i] == c[i] || b[i] == c[i]) ? "YES" : "NO";
 	}
 }
