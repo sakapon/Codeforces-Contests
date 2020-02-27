@@ -13,26 +13,15 @@ class B
 
 		if (a.All(x => x == -1)) return "0 0";
 
-		var M = 0;
-		for (int i = 1; i < n; i++)
-		{
-			if (a[i - 1] > -1 && a[i] > -1)
-				M = Math.Max(M, Math.Abs(a[i] - a[i - 1]));
-		}
+		var diffs = Enumerable.Range(0, n - 1).Where(i => a[i] != -1 && a[i + 1] != -1).Select(i => Math.Abs(a[i + 1] - a[i])).ToArray();
+		var nexts = Enumerable.Range(0, n - 1).Where(i => a[i] != -1 ^ a[i + 1] != -1).Select(i => a[i] != -1 ? a[i] : a[i + 1]).ToArray();
 
-		int min = 1 << 30, max = 0;
-		for (int i = 0; i < n; i++)
-		{
-			if (a[i] == -1) continue;
+		var max = nexts.Max();
+		var min = nexts.Min();
+		var k = (max + min) / 2;
+		var m = (max - min + 1) / 2;
+		if (diffs.Any()) m = Math.Max(m, diffs.Max());
 
-			if (i > 0 && a[i - 1] == -1 || i < a.Length - 1 && a[i + 1] == -1)
-			{
-				max = Math.Max(max, a[i]);
-				min = Math.Min(min, a[i]);
-			}
-		}
-		var k = (max + min + 1) / 2;
-		M = Math.Max(M, (max - min + 1) / 2);
-		return $"{M} {k}";
+		return $"{m} {k}";
 	}
 }
