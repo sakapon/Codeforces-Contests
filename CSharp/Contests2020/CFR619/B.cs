@@ -11,17 +11,12 @@ class B
 		var n = int.Parse(Console.ReadLine());
 		var a = Read();
 
-		if (a.All(x => x == -1)) return "0 0";
-
-		var diffs = Enumerable.Range(0, n - 1).Where(i => a[i] != -1 && a[i + 1] != -1).Select(i => Math.Abs(a[i + 1] - a[i])).ToArray();
 		var nexts = Enumerable.Range(0, n - 1).Where(i => a[i] != -1 ^ a[i + 1] != -1).Select(i => a[i] != -1 ? a[i] : a[i + 1]).ToArray();
+		if (!nexts.Any()) return "0 0";
 
-		var max = nexts.Max();
-		var min = nexts.Min();
-		var k = (max + min) / 2;
-		var m = (max - min + 1) / 2;
-		if (diffs.Any()) m = Math.Max(m, diffs.Max());
-
+		var k = (nexts.Max() + nexts.Min()) / 2;
+		var b = Array.ConvertAll(a, x => x == -1 ? k : x);
+		var m = Enumerable.Range(0, n - 1).Max(i => Math.Abs(b[i + 1] - b[i]));
 		return $"{m} {k}";
 	}
 }
