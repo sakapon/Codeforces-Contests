@@ -6,14 +6,10 @@ class A
 	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 
-	static long Solve()
+	static string Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
-
-		var r = 0L;
-		return r;
+		Console.ReadLine();
+		var s = new string(Console.ReadLine().Where(c => (c - '0') % 2 == 1).Take(2).ToArray());
+		return s.Length < 2 ? "-1" : s;
 	}
 }

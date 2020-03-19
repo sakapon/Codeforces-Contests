@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Linq;
 
-class A
+class B2
 {
 	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
 		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		long n = h[0], g = h[1], b = h[2];
 
-		var r = 0L;
-		return r;
+		var q = Math.DivRem((n + 1) / 2, g, out var rem);
+		if (rem == 0) { q--; rem = g; }
+		var r = q * (g + b) + rem;
+		return r < n ? n : r;
 	}
 }

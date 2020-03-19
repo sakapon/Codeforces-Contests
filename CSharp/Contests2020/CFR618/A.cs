@@ -9,11 +9,10 @@ class A
 	static long Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		var a = Read();
 
-		var r = 0L;
-		return r;
+		var c0 = a.Count(x => x == 0);
+		var sum = a.Sum() + c0;
+		return sum == 0 ? c0 + 1 : c0;
 	}
 }
