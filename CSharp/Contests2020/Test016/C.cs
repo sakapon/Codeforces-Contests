@@ -10,24 +10,26 @@ class C
 	static long Solve()
 	{
 		var s = Console.ReadLine();
-		var d = new Dictionary<char, V> { { 'S', new V(0, -1) }, { 'N', new V(0, 1) }, { 'W', new V(-1, 0) }, { 'E', new V(1, 0) } };
+
+		long x = 0, y = 0;
+		Action<char> move = c =>
+		{
+			switch (c)
+			{
+				case 'S': --y; break;
+				case 'N': ++y; break;
+				case 'W': --x; break;
+				case 'E': ++x; break;
+			}
+		};
 
 		var l = new List<long>();
-		var v = new V();
 		foreach (var c in s)
 		{
-			v += d[c];
-			l.Add(v.X * (1 << 20) + v.Y);
-			v += d[c];
+			move(c);
+			l.Add(x * (1 << 20) + y);
+			move(c);
 		}
-		return l.GroupBy(x => x).Sum(g => g.Count() + 4);
+		return l.GroupBy(v => v).Sum(g => g.Count() + 4);
 	}
-}
-
-struct V
-{
-	public long X, Y;
-	public V(long x, long y) { X = x; Y = y; }
-
-	public static V operator +(V v1, V v2) => new V(v1.X + v2.X, v1.Y + v2.Y);
 }
