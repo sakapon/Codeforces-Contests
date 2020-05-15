@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 class C
@@ -8,12 +9,25 @@ class C
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
 		var s = Console.ReadLine();
+		var d = new Dictionary<char, V> { { 'S', new V(0, -1) }, { 'N', new V(0, 1) }, { 'W', new V(-1, 0) }, { 'E', new V(1, 0) } };
 
-		var r = 0L;
-		return r;
+		var l = new List<long>();
+		var v = new V();
+		foreach (var c in s)
+		{
+			v += d[c];
+			l.Add(v.X * (1 << 20) + v.Y);
+			v += d[c];
+		}
+		return l.GroupBy(x => x).Sum(g => g.Count() + 4);
 	}
+}
+
+struct V
+{
+	public long X, Y;
+	public V(long x, long y) { X = x; Y = y; }
+
+	public static V operator +(V v1, V v2) => new V(v1.X + v2.X, v1.Y + v2.Y);
 }
