@@ -11,7 +11,7 @@ class C
 	{
 		var s = Console.ReadLine();
 
-		long x = 0, y = 0;
+		long x = 0, y = 0, r = 0;
 		Action<char> move = c =>
 		{
 			switch (c)
@@ -23,13 +23,13 @@ class C
 			}
 		};
 
-		var l = new List<long>();
+		var h = new HashSet<long>();
 		foreach (var c in s)
 		{
 			move(c);
-			l.Add(x * (1 << 20) + y);
+			r += h.Add(x * (1 << 20) + y) ? 5 : 1;
 			move(c);
 		}
-		return l.GroupBy(v => v).Sum(g => g.Count() + 4);
+		return r;
 	}
 }
