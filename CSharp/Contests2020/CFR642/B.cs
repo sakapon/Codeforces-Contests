@@ -8,12 +8,16 @@ class B
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
 		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		var k = h[1];
+		var a = Read();
+		var b = Read();
+		Array.Sort(a);
+		Array.Sort(b);
+		Array.Reverse(b);
 
-		var r = 0L;
-		return r;
+		for (int i = 0; i < k && a[i] < b[i]; i++)
+			a[i] = b[i];
+		return a.Sum();
 	}
 }

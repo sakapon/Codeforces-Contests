@@ -8,12 +8,16 @@ class A
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
 		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		return Query(h[0], h[1]);
+	}
 
-		var r = 0L;
-		return r;
+	static int Query(int n, int k)
+	{
+		if (n % 2 == 0) return n + 2 * k;
+
+		for (int i = 3; ; i += 2)
+			if (n % i == 0)
+				return Query(n + i, k - 1);
 	}
 }
