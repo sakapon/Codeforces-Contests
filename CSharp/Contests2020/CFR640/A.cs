@@ -1,19 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 class A
 {
-	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 
-	static long Solve()
+	static string Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
 
-		var r = 0L;
-		return r;
+		var l = new List<int>();
+		for (int d = 10, r; n > 0; d *= 10)
+		{
+			n -= r = n % d;
+			if (r > 0) l.Add(r);
+		}
+		return $"{l.Count}\n{string.Join(" ", l)}";
 	}
 }

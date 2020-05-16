@@ -8,12 +8,10 @@ class C
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
 		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		int n = h[0], k = h[1];
 
-		var r = 0L;
-		return r;
+		var r = k % (n - 1);
+		return k / (n - 1) * n + (r == 0 ? -1 : r);
 	}
 }
