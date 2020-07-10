@@ -9,11 +9,10 @@ class B
 	static long Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		var a = Read();
 
-		var r = 0L;
-		return r;
+		var c0 = a.Where((x, i) => i % 2 == 0 && x % 2 != 0).Count();
+		var c1 = a.Where((x, i) => i % 2 == 1 && x % 2 != 1).Count();
+		return c0 == c1 ? c0 : -1;
 	}
 }
