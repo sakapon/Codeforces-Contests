@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Linq;
+using System.Text.RegularExpressions;
 
 class A
 {
-	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
-
-	static long Solve()
+	static void Main()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
-
-		var r = 0L;
-		return r;
+		var s = Regex.Replace(Console.ReadLine(), "/+", "/");
+		Console.WriteLine(s == "/" ? s : s.TrimEnd('/'));
 	}
 }

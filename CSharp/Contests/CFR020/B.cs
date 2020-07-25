@@ -1,19 +1,43 @@
 ﻿using System;
-using System.Linq;
 
 class B
 {
-	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
-
-	static long Solve()
+	static void Main()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		var h = Array.ConvertAll(Console.ReadLine().Split(), double.Parse);
+		double a = h[0], b = h[1], c = h[2];
+		if (a < 0) (a, b, c) = (-a, -b, -c);
+		var d = b * b - 4 * a * c;
 
-		var r = 0L;
-		return r;
+		if (a != 0)
+		{
+			if (d > 0)
+			{
+				Console.WriteLine(2);
+				Write((-b - Math.Sqrt(d)) / (2 * a));
+				Write((-b + Math.Sqrt(d)) / (2 * a));
+			}
+			else if (d == 0)
+			{
+				Console.WriteLine(1);
+				Write(-b / (2 * a));
+			}
+			else
+			{
+				Console.WriteLine(0);
+			}
+			return;
+		}
+
+		if (b != 0)
+		{
+			Console.WriteLine(1);
+			Write(-c / b);
+			return;
+		}
+
+		Console.WriteLine(c == 0 ? -1 : 0);
 	}
+
+	static void Write(double d) => Console.WriteLine($"{d:F6}");
 }
