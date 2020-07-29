@@ -9,44 +9,46 @@ class C
 	{
 		var h = Read();
 		var n = h[0];
-		var rs = new int[h[1]].Select(_ => Read()).ToArray();
+		var es = new int[h[1]].Select(_ => Read()).ToArray();
 
-		var map = UndirectedMap(n, rs);
+		var r = Dijkstra(n, 1, n, es);
+		Console.WriteLine(r == null ? "-1" : string.Join(" ", r));
+	}
 
-		var u = Enumerable.Repeat(1L << 60, n + 1).ToArray();
-		var from = new int[n + 1];
-		var pq = PQ<int>.Create(p => u[p]);
-		u[1] = 0;
-		pq.Push(1);
-
-		while (pq.Any())
+	static int[] Dijkstra(int n, int sv, int ev, int[][] es)
+	{
+		var map = Array.ConvertAll(new int[n + 1], _ => new List<int[]>());
+		foreach (var e in es)
 		{
-			var p = pq.Pop();
-			foreach (var r in map[p])
+			map[e[0]].Add(new[] { e[1], e[2] });
+			map[e[1]].Add(new[] { e[0], e[2] });
+		}
+
+		var from = Enumerable.Repeat(-1, n + 1).ToArray();
+		var u = Enumerable.Repeat(long.MaxValue, n + 1).ToArray();
+		var pq = PQ<int>.Create(v => u[v]);
+		u[sv] = 0;
+		pq.Push(sv);
+
+		while (pq.Count > 0)
+		{
+			var v = pq.Pop();
+			if (v == ev) break;
+			foreach (var e in map[v])
 			{
-				if (u[r.p] <= u[p] + r.w) continue;
-				u[r.p] = u[p] + r.w;
-				from[r.p] = p;
-				pq.Push(r.p);
+				if (u[e[0]] <= u[v] + e[1]) continue;
+				from[e[0]] = v;
+				u[e[0]] = u[v] + e[1];
+				pq.Push(e[0]);
 			}
 		}
 
-		var path = new List<int> { n };
-		var t = n;
-		while ((t = from[t]) > 0) path.Add(t);
+		if (from[ev] == -1) return null;
+		var path = new List<int>();
+		for (var v = ev; v != -1; v = from[v])
+			path.Add(v);
 		path.Reverse();
-		Console.WriteLine(path[0] == 1 ? string.Join(" ", path) : "-1");
-	}
-
-	static List<(int p, int w)>[] UndirectedMap(int n, int[][] rs)
-	{
-		var map = Array.ConvertAll(new int[n + 1], _ => new List<(int, int)>());
-		foreach (var r in rs)
-		{
-			map[r[0]].Add((r[1], r[2]));
-			map[r[1]].Add((r[0], r[2]));
-		}
-		return map;
+		return path.ToArray();
 	}
 }
 
