@@ -9,11 +9,14 @@ class C
 	static long Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		var rn = (int)Math.Sqrt(n);
 
-		var r = 0L;
+		var r = 1 << 30;
+		for (int x = Math.Max(1, rn - 5); x <= rn + 5; x++)
+		{
+			var t = x - 1 + (n + x - 1) / x - 1;
+			r = Math.Min(r, t);
+		}
 		return r;
 	}
 }

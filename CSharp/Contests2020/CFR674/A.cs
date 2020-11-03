@@ -8,12 +8,10 @@ class A
 
 	static long Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
 		var h = Read();
-		//int n = h[0], m = h[1];
-		var s = Console.ReadLine();
+		int n = h[0], x = h[1];
 
-		var r = 0L;
-		return r;
+		if (n <= 2) return 1;
+		return (n + x - 3) / x + 1;
 	}
 }
