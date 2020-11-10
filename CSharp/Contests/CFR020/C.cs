@@ -17,7 +17,7 @@ class C
 		Console.WriteLine(string.Join(" ", path));
 	}
 
-	static Tuple<long[], int[][]> Dijkstra(int n, int[][] es, bool directed, int sv, int ev = 1)
+	static Tuple<long[], int[][]> Dijkstra(int n, int[][] es, bool directed, int sv, int ev = -1)
 	{
 		var map = Array.ConvertAll(new bool[n], _ => new List<int[]>());
 		foreach (var e in es)
