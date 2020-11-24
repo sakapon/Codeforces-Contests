@@ -1,18 +1,18 @@
 ﻿using System;
-using System.Linq;
 
 class E
 {
-	static int[] Read() => Console.ReadLine().Split().Select(int.Parse).ToArray();
 	static void Main()
 	{
-		Console.ReadLine();
-		var s = Console.ReadLine();
 		var n = int.Parse(Console.ReadLine());
-		var a = Console.ReadLine().Split().Select(int.Parse).ToArray();
-		var h = Read();
-		var ps = new int[h[0]].Select(_ => Read()).ToArray();
-
-		Console.WriteLine(string.Join(" ", a));
+		Console.WriteLine(Ncr(n, n / 2) / 2 * Factorial(n / 2 - 1) * Factorial(n / 2 - 1));
 	}
+
+	public static long Factorial(int n) { for (long x = 1, i = 1; ; x *= ++i) if (i >= n) return x; }
+	public static long Npr(int n, int r)
+	{
+		if (n < r) return 0;
+		for (long x = 1, i = n - r; ; x *= ++i) if (i >= n) return x;
+	}
+	public static long Ncr(int n, int r) => n < r ? 0 : n - r < r ? Ncr(n, n - r) : Npr(n, r) / Factorial(r);
 }
