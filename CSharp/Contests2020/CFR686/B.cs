@@ -9,14 +9,10 @@ class B
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static long Solve()
 	{
-		Console.ReadLine();
-		var s = Console.ReadLine();
-		//var (n, m) = Read2();
 		var n = int.Parse(Console.ReadLine());
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		var r = 0L;
-		return r;
+		var g = a.Select((x, i) => (x, i)).GroupBy(v => v.x).OrderBy(g => g.Key).FirstOrDefault(g => g.Count() == 1);
+		return g == null ? -1 : g.First().i + 1;
 	}
 }
