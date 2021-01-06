@@ -10,6 +10,6 @@ class A
 	static string Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		return string.Join(" ", Enumerable.Range(2, n - 1).Append(1));
+		return string.Join(" ", Enumerable.Range(1, n - 1).Prepend(n));
 	}
 }

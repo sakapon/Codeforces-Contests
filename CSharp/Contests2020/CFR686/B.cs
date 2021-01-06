@@ -12,7 +12,7 @@ class B
 		var n = int.Parse(Console.ReadLine());
 		var a = Read();
 
-		var g = a.Select((x, i) => (x, i)).GroupBy(v => v.x).OrderBy(g => g.Key).FirstOrDefault(g => g.Count() == 1);
-		return g == null ? -1 : g.First().i + 1;
+		var t = a.Select((x, i) => (x, i: i + 1)).GroupBy(v => v.x).Where(g => g.Count() == 1).OrderBy(g => g.Key).FirstOrDefault()?.First();
+		return t?.i ?? -1;
 	}
 }

@@ -13,10 +13,10 @@ class C
 		var n = int.Parse(Console.ReadLine());
 		var a = Read();
 
-		var d = a.GroupCountsBySeq(x => x).GroupBy(p => p.Key).ToDictionary(g => g.Key, g => g.Count() + 1);
+		var d = a.GroupCountsBySeq(x => x).GroupCounts(p => p.Key);
 		d[a[0]]--;
 		d[a[^1]]--;
-		return d.Min(p => p.Value);
+		return d.Min(p => p.Value) + 1;
 	}
 }
 
