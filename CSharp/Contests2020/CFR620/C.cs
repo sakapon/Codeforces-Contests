@@ -10,26 +10,11 @@ class C
 	static bool Solve()
 	{
 		var (n, m) = Read2();
-		var ps = Array.ConvertAll(new bool[n], _ => Read3())
-			.GroupBy(p => p.t)
-			.Select(g =>
-			{
-				var (l, h) = (-1 << 30, 1 << 30);
-				foreach (var (t, l_, h_) in g)
-				{
-					l = Math.Max(l, l_);
-					h = Math.Min(h, h_);
-				}
-				return (t: g.Key, l, h);
-			})
-			.OrderBy(p => p.t)
-			.ToArray();
+		var ps = Array.ConvertAll(new bool[n], _ => Read3());
 
 		var (t, l, h) = (0, m, m);
 		foreach (var (t_, l_, h_) in ps)
 		{
-			if (h_ < l_) return false;
-
 			l -= t_ - t;
 			h += t_ - t;
 			t = t_;
