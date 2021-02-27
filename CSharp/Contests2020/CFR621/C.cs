@@ -8,15 +8,15 @@ class C
 	{
 		var s = Console.ReadLine();
 
-		var map = new Map<string, long>();
+		var map = new Map<(char, char), long>();
 
 		foreach (var c in s)
 		{
 			for (char c0 = 'a'; c0 <= 'z'; c0++)
 			{
-				map[$"{c0}{c}"] += map[c0.ToString()];
+				map[(c0, c)] += map[(c0, '/')];
 			}
-			map[c.ToString()]++;
+			map[(c, '/')]++;
 		}
 		Console.WriteLine(map.Values.Max());
 	}
