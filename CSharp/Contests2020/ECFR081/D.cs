@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 class D
@@ -11,21 +10,21 @@ class D
 	{
 		var h = Read();
 		long a = h[0], m = h[1];
-
-		m /= Gcd(a, m);
-		return Factorize(m).Distinct().Aggregate(m, (x, p) => x / p * (p - 1));
+		return Totient(m / Gcd(a, m));
 	}
 
 	static long Gcd(long x, long y) { for (long r; (r = x % y) > 0; x = y, y = r) ; return y; }
 
-	static long[] Factorize(long n)
+	static long Totient(long n)
 	{
-		long rn = (long)Math.Ceiling(Math.Sqrt(n)), x = 2;
-		var r = new List<long>();
-		while (n % x == 0) { r.Add(x); n /= x; }
-		for (x++; x <= rn && n > 1; x += 2)
-			while (n % x == 0) { r.Add(x); n /= x; }
-		if (n > 1) r.Add(n);
-		return r.ToArray();
+		var r = n;
+		for (long x = 2; x * x <= n && n > 1; ++x)
+			if (n % x == 0)
+			{
+				r = r / x * (x - 1);
+				while ((n /= x) % x == 0) ;
+			}
+		if (n > 1) r = r / n * (n - 1);
+		return r;
 	}
 }
