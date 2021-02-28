@@ -12,16 +12,9 @@ class A
 
 		if (a.Sum() == 0) return "NO";
 
-		var a_pos = a.Where(x => x > 0).ToArray();
-		var a_neg = a.Where(x => x < 0).ToArray();
-		var a_0 = a.Where(x => x == 0).ToArray();
-
-		var sum_pos = a_pos.Sum();
-		var sum_neg = a_neg.Sum();
-
-		if (sum_pos > -sum_neg)
-			return "YES\n" + string.Join(" ", a_pos.Concat(a_neg).Concat(a_0));
-		else
-			return "YES\n" + string.Join(" ", a_neg.Concat(a_pos).Concat(a_0));
+		Array.Sort(a);
+		if (a.Where(x => x > 0).Sum() > -a.Where(x => x < 0).Sum())
+			Array.Reverse(a);
+		return "YES\n" + string.Join(" ", a);
 	}
 }

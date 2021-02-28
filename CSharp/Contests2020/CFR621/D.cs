@@ -27,16 +27,15 @@ class D
 			var r1 = map.Bfs(1, -1);
 			var rn = map.Bfs(n, -1);
 
-			var max = 0L;
-			var q = PriorityQueue<long>.Create(true);
+			long M = 0, M1 = -1;
 			var vs = a.Select(i => (i, d: r1[i] - rn[i])).OrderBy(v => v.d);
 			foreach (var (i, _) in vs)
 			{
-				if (q.Any) max = Math.Max(max, q.First + rn[i]);
-				q.Push(r1[i]);
+				if (M1 != -1) M = Math.Max(M, M1 + rn[i]);
+				M1 = Math.Max(M1, r1[i]);
 			}
-			max++;
-			Console.WriteLine(Math.Min(r1[n], max));
+			M++;
+			Console.WriteLine(Math.Min(r1[n], M));
 		}
 	}
 }
