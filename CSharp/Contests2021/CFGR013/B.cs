@@ -11,9 +11,9 @@ class B
 		var (n, u, v) = Read3();
 		var a = Read();
 
-		var d = Enumerable.Range(0, n - 1).Select(i => Math.Abs(a[i + 1] - a[i])).ToArray();
-		if (d.Any(x => x >= 2)) return 0;
-		if (d.Any(x => x >= 1)) return Math.Min(u, v);
-		return Math.Min(u, v) + v;
+		var M = Enumerable.Range(0, n - 1).Max(i => Math.Abs(a[i + 1] - a[i]));
+		if (M == 0) return Math.Min(u, v) + v;
+		if (M == 1) return Math.Min(u, v);
+		return 0;
 	}
 }

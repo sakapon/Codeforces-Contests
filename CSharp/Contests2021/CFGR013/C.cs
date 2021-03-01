@@ -11,44 +11,17 @@ class C
 		var s = Read();
 
 		var r = 0L;
-		var t = new int[n];
+		var t = new int[n + 1];
 
 		for (int i = 0; i < n; i++)
 		{
-			if (t[i] > 0)
-			{
-				// n に飛び越す場合
-				var ns = Math.Max(1, n - 1 - i);
-				var c = Math.Min(t[i], Math.Max(0, s[i] - ns));
-				s[i] -= c;
-				t[i] -= c;
-			}
-			while (t[i] > 0 && s[i] > 1 && i + s[i] < n)
-			{
-				// 次に飛ぶ場合
-				t[i + s[i]]++;
-				s[i]--;
-				t[i]--;
-			}
-			if (i + 1 < n && t[i] > 0)
-			{
-				// 隣に飛ぶ場合
-				t[i + 1] += t[i];
-			}
+			// i を通過する回数
+			var c = Math.Max(t[i], s[i] - 1);
+			r += c - t[i];
 
-			if (s[i] > 1 && i + s[i] >= n)
-			{
-				var ns = Math.Max(1, n - 1 - i);
-				r += s[i] - ns;
-				s[i] = ns;
-			}
-
-			while (s[i] > 1)
-			{
-				r++;
-				t[i + s[i]]++;
-				s[i]--;
-			}
+			for (int d = 2; d <= s[i] && i + d < n; d++)
+				t[i + d]++;
+			if (c == t[i]) t[i + 1] += t[i] - s[i] + 1;
 		}
 		return r;
 	}

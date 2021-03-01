@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Linq;
 
-class D
+class D2
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static void Main()
@@ -10,7 +9,7 @@ class D
 		var qc = int.Parse(Console.ReadLine());
 		var qs = Array.ConvertAll(new bool[qc], _ => Read());
 
-		var r30 = Enumerable.Range(0, 30).ToArray();
+		var f30 = Enumerable.Range(0, 30).Select(i => 1 << i).ToArray();
 		Console.WriteLine(string.Join("\n", qs.Select(q => Solve(q) ? "YES" : "NO")));
 
 		bool Solve(int[] q)
@@ -20,17 +19,13 @@ class D
 			if (u > v) return false;
 			if (u == v) return true;
 
-			var bu = new BitArray(new[] { u });
-			var bv = new BitArray(new[] { v });
-			var iu = Array.FindAll(r30, i => bu[i]);
-			var iv = Array.FindAll(r30, i => bv[i]);
+			var fu = Array.FindAll(f30, f => (u & f) != 0);
+			var fv = Array.FindAll(f30, f => (v & f) != 0);
 
-			if (iu.Length < iv.Length) return false;
+			if (fu.Length < fv.Length) return false;
 
-			for (int i = 0; i < iv.Length; i++)
-			{
-				if (iu[i] > iv[i]) return false;
-			}
+			for (int i = 0; i < fv.Length; i++)
+				if (fu[i] > fv[i]) return false;
 			return true;
 		}
 	}
