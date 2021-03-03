@@ -24,13 +24,15 @@ class E
 			{
 				if (s[i] == '1')
 				{
-					count++;
-					(c2, c3) = (Math.Min(c1, c2), Math.Min(c2, c3) + 1);
+					c3 = Math.Min(c2, c3) + 1;
+					c2 = Math.Min(c1, c2);
 					c1++;
+					count++;
 				}
 				else
 				{
-					(c2, c3) = (Math.Min(c1, c2) + 1, Math.Min(c2, c3));
+					c3 = Math.Min(c2, c3);
+					c2 = Math.Min(c1, c2) + 1;
 				}
 			}
 			var target = Math.Min(c1, Math.Min(c2, c3));
