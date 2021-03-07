@@ -18,8 +18,6 @@ class B
 
 		var l = (n - 1) / 2;
 		var r = n / 2;
-		var (d, u) = (l, r);
-
-		return (xs[r] - xs[l] + 1) * (ys[u] - ys[d] + 1);
+		return (xs[r] - xs[l] + 1) * (ys[r] - ys[l] + 1);
 	}
 }
