@@ -14,6 +14,8 @@ class D
 		var a = ReadL();
 		var qs = Array.ConvertAll(new bool[qc], _ => Read2L());
 
+		var qfs = Array.ConvertAll(qs, q => Factorize(q.x));
+
 		var fmaps = Array.ConvertAll(a, v =>
 		{
 			var map = new Map<long, int>();
@@ -22,9 +24,13 @@ class D
 			return map;
 		});
 		// final state
-		foreach (var (i, x) in qs)
-			foreach (var p in Factorize(x))
-				fmaps[i - 1][p]++;
+		for (int k = 0; k < qc; k++)
+		{
+			var (i, x) = qs[k];
+			var map = fmaps[i - 1];
+			foreach (var p in qfs[k])
+				map[p]++;
+		}
 
 		// final GCD
 		var gcdMap = new Map<long, int>();
@@ -47,26 +53,27 @@ class D
 			gcd %= M;
 		}
 
-		var r = new List<long> { gcd };
-		Array.Reverse(qs);
-		foreach (var (i, x) in qs)
+		var r = new long[qc];
+		r[^1] = gcd;
+		for (int k = qc - 1; k > 0; k--)
 		{
-			var nv = r.Last();
-			foreach (var p in Factorize(x))
+			var (i, x) = qs[k];
+			var map = fmaps[i - 1];
+
+			var nv = r[k];
+			foreach (var p in qfs[k])
 			{
-				fmaps[i - 1][p]--;
-				if (fmaps[i - 1][p] < gcdMap[p])
+				map[p]--;
+				if (map[p] < gcdMap[p])
 				{
 					gcdMap[p]--;
 					nv *= MInv(p);
 					nv %= M;
 				}
 			}
-			r.Add(nv);
+			r[k - 1] = nv;
 		}
 
-		r.RemoveAt(r.Count - 1);
-		r.Reverse();
 		Console.WriteLine(string.Join("\n", r));
 	}
 
