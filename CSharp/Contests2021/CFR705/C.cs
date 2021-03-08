@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-class C
+static class C
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
@@ -21,29 +21,27 @@ class C
 
 		for (int i = n - 1; i >= 0; i--)
 		{
-			var ci = s[i] - 97;
+			var ci = s[i].ToIndexForLower();
 			counts[ci]--;
 
 			for (ci++; ci < 26; ci++)
 			{
 				counts[ci]++;
 
-				if (Remain() < n - i)
+				var gap = n - 1 - i - Remain();
+				if (gap >= 0)
 				{
-					var l = new List<char>();
+					var sb = new StringBuilder(s[..i]);
+					sb.Append(ci.ToLower())
+						.Append('a', gap);
 
 					for (int cj = 0; cj < 26; cj++)
 					{
 						var x = counts[cj];
 						if (x % k == 0) continue;
-						l.AddRange(Enumerable.Repeat((char)(cj + 97), k - x % k));
+						sb.Append(cj.ToLower(), k - x % k);
 					}
-					if (l.Count < n - i)
-						l.InsertRange(0, Enumerable.Repeat('a', n - 1 - i - l.Count));
-					l.Insert(0, (char)(ci + 97));
-					l.InsertRange(0, s[..i]);
-
-					return new string(l.ToArray());
+					return sb.ToString();
 				}
 				counts[ci]--;
 			}
@@ -58,4 +56,7 @@ class C
 		foreach (var x in s) ++c[x - 97];
 		return c;
 	}
+
+	static int ToIndexForLower(this char c) => c - 97;
+	static char ToLower(this int i) => (char)(i + 97);
 }
