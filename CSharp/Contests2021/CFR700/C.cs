@@ -1,22 +1,57 @@
 ﻿using System;
-using System.Linq;
 
 class C
 {
-	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
-	static long Solve()
+	static int Query(int i)
 	{
-		Console.ReadLine();
-		var s = Console.ReadLine();
-		//var (n, m) = Read2();
+		Console.WriteLine($"? {i}");
+		return int.Parse(Console.ReadLine());
+	}
+	static void Main() => Console.WriteLine($"! {Solve()}");
+	static object Solve()
+	{
 		var n = int.Parse(Console.ReadLine());
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		if (n == 1) return 1;
 
-		var r = 0L;
-		return r;
+		var (l, m, r) = (0, (n + 1) / 2, n + 1);
+		var (al, am, ar) = (1 << 30, Query(m), 1 << 30);
+		int t;
+
+		// Keep a[l] > a[m] < a[r].
+		while (m - l > 1 || r - m > 1)
+		{
+			if (m - l >= r - m)
+			{
+				// left-side
+				var v = Query(t = l + (m - l) / 2);
+				if (v < am)
+				{
+					(m, r) = (t, m);
+					(am, ar) = (v, am);
+				}
+				else
+				{
+					l = t;
+					al = v;
+				}
+			}
+			else
+			{
+				// right-side
+				var v = Query(t = m + (r - m) / 2);
+				if (v < am)
+				{
+					(m, l) = (t, m);
+					(am, al) = (v, am);
+				}
+				else
+				{
+					r = t;
+					ar = v;
+				}
+			}
+		}
+
+		return m;
 	}
 }
