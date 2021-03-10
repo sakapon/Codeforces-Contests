@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 class D1T
@@ -7,15 +8,18 @@ class D1T
 	{
 		const int n = 6;
 
-		Power(Enumerable.Range(1, n).ToArray(), n, a =>
+		using (var writer = File.CreateText("D1T.txt"))
 		{
-			var expected = Naive(a);
-			var actual = Solve(a);
-			if (expected == actual) return;
+			Power(Enumerable.Range(1, n).ToArray(), n, a =>
+			{
+				var expected = Naive(a);
+				var actual = Solve(a);
+				if (expected == actual) return;
 
-			Console.WriteLine(string.Join(" ", a));
-			Console.WriteLine($"expected: {expected}, actual: {actual}");
-		});
+				writer.WriteLine(string.Join(" ", a));
+				writer.WriteLine($"expected: {expected}, actual: {actual}");
+			});
+		}
 	}
 
 	static int Solve(int[] a)
