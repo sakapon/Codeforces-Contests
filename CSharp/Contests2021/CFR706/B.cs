@@ -9,14 +9,19 @@ class B
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static long Solve()
 	{
-		Console.ReadLine();
-		var s = Console.ReadLine();
-		//var (n, m) = Read2();
-		var n = int.Parse(Console.ReadLine());
+		var (n, k) = Read2();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		if (k == 0) return n;
 
-		var r = 0L;
-		return r;
+		Array.Sort(a);
+		var max = a.Last();
+
+		if (max == n - 1) return n + k;
+
+		var set = a.ToHashSet();
+		var mex = Enumerable.Range(0, n).First(i => !set.Contains(i));
+
+		var m = (mex + max + 1) / 2;
+		return set.Contains(m) ? n : n + 1;
 	}
 }
