@@ -23,7 +23,7 @@ class D1
 			if (b1.g.Key != b2.g.Key) continue;
 
 			var key = b2.g.Key;
-			if (Enumerable.Range(b1.i + 1, b2.i - b1.i - 1).All(j => a[j] == key || a[j - 1] == a[j + 1]))
+			if (Enumerable.Range(b1.i + 1, b2.i - b1.i - 1).All(j => gs[j].Key == key || gs[j - 1].Key == gs[j + 1].Key))
 				r--;
 		}
 
