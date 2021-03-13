@@ -4,20 +4,29 @@ using System.Linq;
 class A
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
+	static (int a, int b) Read2() { var a = Read(); return (a[0], a[1]); }
 	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var ps = Array.ConvertAll(new bool[n], _ => Read2());
+		var t = Read();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		int r = 0, dep = 0;
+		for (int i = 0; i < n; i++)
+		{
+			var (a, b) = ps[i];
+
+			if (i == 0)
+				r = a + t[i];
+			else
+				r = dep + a - ps[i - 1].b + t[i];
+
+			var t2 = (b - a + 1) / 2;
+			dep = Math.Max(r + t2, b);
+		}
+
+		return r;
 	}
 }
