@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 class D
 {
@@ -23,24 +22,12 @@ class D
 
 		if (m % n == 0)
 		{
-			var days = new List<int>();
+			var days = new List<long>();
 			for (int i = 0; i < m; i++)
 				if (a[i % n] == b[i])
 					days.Add(i);
 
-			var d = m - days.Count;
-			var turn = Math.DivRem(k, d, out k);
-			if (k == 0)
-			{
-				turn--;
-				k = d;
-			}
-
-			// sentinel
-			days.Add(m);
-			for (int i = 0; i < days.Count; i++)
-				if (k + i - 1 < days[i])
-					return m * turn + k + i;
+			return KthFalseDay(k - 1, m, days.ToArray()) + 1;
 		}
 		else if (Gcd(n, m) == 1)
 		{
@@ -58,20 +45,7 @@ class D
 			}
 			days.Sort();
 
-			var nm = (long)n * m;
-			var d = nm - days.Count;
-			var turn = Math.DivRem(k, d, out k);
-			if (k == 0)
-			{
-				turn--;
-				k = d;
-			}
-
-			// sentinel
-			days.Add(nm);
-			for (int i = 0; i < days.Count; i++)
-				if (k + i - 1 < days[i])
-					return nm * turn + k + i;
+			return KthFalseDay(k - 1, (long)n * m, days.ToArray()) + 1;
 		}
 		else
 		{
@@ -95,19 +69,7 @@ class D
 			}
 			days.Sort();
 
-			var d = nm - days.Count;
-			var turn = Math.DivRem(k, d, out k);
-			if (k == 0)
-			{
-				turn--;
-				k = d;
-			}
-
-			// sentinel
-			days.Add(nm);
-			for (int i = 0; i < days.Count; i++)
-				if (k + i - 1 < days[i])
-					return nm * turn + k + i;
+			return KthFalseDay(k - 1, nm, days.ToArray()) + 1;
 		}
 
 		throw new InvalidOperationException();
@@ -145,5 +107,17 @@ class D
 		var v = ExtendedEuclid(m, n);
 		var r = a * n * v[1] + b * m * v[0];
 		return (r %= m * n) < 0 ? r + m * n : r;
+	}
+
+	// k 回目に false となる日を求めます。
+	// k, day: 0-indexed
+	// 0 <= trueDay < period
+	static long KthFalseDay(long k, long period, long[] trueDays)
+	{
+		var turns = Math.DivRem(k, period - trueDays.Length, out k);
+		for (int i = 0; i < trueDays.Length; ++i)
+			if (k + i < trueDays[i])
+				return turns * period + k + i;
+		return turns * period + k + trueDays.Length;
 	}
 }
