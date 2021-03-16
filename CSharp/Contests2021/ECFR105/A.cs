@@ -3,21 +3,42 @@ using System.Linq;
 
 class A
 {
-	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
-	static object Solve()
+	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
+	static bool Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
 		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var n = s.Length;
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		if (n % 2 != 0) return false;
+
+		//var ft = new[] { false, true };
+		var brackets = new[] { '(', ')' };
+
+		foreach (var a in brackets)
+		{
+			var sa = s.Replace('A', a);
+			foreach (var b in brackets)
+			{
+				var sb = sa.Replace('B', b);
+				foreach (var c in brackets)
+				{
+					var sc = sb.Replace('C', c);
+					if (IsRegularBracket(sc))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	static bool IsRegularBracket(string s)
+	{
+		var t = 0;
+		foreach (var c in s)
+			if (c == '(')
+				++t;
+			else if (c == ')')
+				if (--t < 0) return false;
+		return t == 0;
 	}
 }

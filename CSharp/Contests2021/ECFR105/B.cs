@@ -4,20 +4,23 @@ using System.Linq;
 class B
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
-	static object Solve()
+	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
+	static bool Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var n = a[0];
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var ft = new[] { 0, 1 };
+
+		foreach (var lt in ft)
+			foreach (var rt in ft)
+				foreach (var rb in ft)
+					foreach (var lb in ft)
+					{
+						var r = new[] { a[1] - lt - rt, a[2] - rt - rb, a[3] - rb - lb, a[4] - lb - lt };
+						if (r.All(x => 0 <= x && x <= n - 2))
+							return true;
+					}
+		return false;
 	}
 }
