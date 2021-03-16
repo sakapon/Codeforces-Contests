@@ -23,7 +23,7 @@ class C
 		var n = a.Length;
 		var m = b.Length;
 
-		// a_n = 1 << 30
+		// a_n = 2^30
 		a = a.Append(1 << 30).ToArray();
 
 		var bset = b.ToHashSet();
@@ -36,14 +36,15 @@ class C
 		for (int k = 1; k <= n; k++)
 		{
 			// k個連結した箱が動く範囲: (a_{k-1} - k, a_k)
+			// k個連結した箱の左端が動く範囲: (a_{k-1} - k, a_k - k]
 			// k個連結した箱の右端が動く範囲: [a_{k-1}, a_k)
 
 			var bmax = 0;
-			var bsj = First(0, m, x => b[x] > a[k - 1] - k);
-			for (int j = bsj; j < m && b[j] <= a[k] - k; j++)
+			var bstart = First(0, m, x => b[x] > a[k - 1] - k);
+			for (int l = bstart; l < m && b[l] <= a[k] - k; l++)
 			{
-				var j2 = Last(-1, m - 1, x => b[x] < b[j] + k);
-				bmax = Math.Max(bmax, j2 - j + 1);
+				var r = Last(-1, m - 1, x => b[x] < b[l] + k);
+				bmax = Math.Max(bmax, r - l + 1);
 			}
 			max = Math.Max(max, bmax + placed[k]);
 		}

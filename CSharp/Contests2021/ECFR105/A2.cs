@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-class A
+class A2
 {
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static bool Solve()
@@ -9,23 +9,22 @@ class A
 		var s = Console.ReadLine();
 		var n = s.Length;
 
-		if (n % 2 != 0) return false;
+		if (s[0] == s[^1]) return false;
 
-		foreach (var a in "()")
+		s = s.Replace(s[0], '(');
+		s = s.Replace(s[^1], ')');
+
+		var upper = s.FirstOrDefault(char.IsUpper);
+		if (upper == 0)
 		{
-			var sa = s.Replace('A', a);
-			foreach (var b in "()")
-			{
-				var sb = sa.Replace('B', b);
-				foreach (var c in "()")
-				{
-					var sc = sb.Replace('C', c);
-					if (IsRegularBracket(sc))
-						return true;
-				}
-			}
+			return IsRegularBracket(s);
 		}
-		return false;
+		else
+		{
+			var sl = s.Replace(upper, '(');
+			var sr = s.Replace(upper, ')');
+			return IsRegularBracket(sl) || IsRegularBracket(sr);
+		}
 	}
 
 	static bool IsRegularBracket(string s)
