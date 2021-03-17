@@ -13,57 +13,29 @@ class D
 		var a = Read();
 		var b = Read();
 
-		if (n > m)
+		var g = Gcd(n, m);
+		var l = Lcm(n, m);
+
+		var cmax = 2 * (int)Math.Max(n, m);
+		var oa = ToOrderMap(a, cmax);
+		var ob = ToOrderMap(b, cmax);
+
+		var days = new List<long>();
+		for (int c = 1; c <= cmax; c++)
 		{
-			(n, m) = (m, n);
-			(a, b) = (b, a);
+			if (oa[c] == -1) continue;
+			if (ob[c] == -1) continue;
+			if (oa[c] % g != ob[c] % g) continue;
+
+			var index = Crt2(n, m, oa[c], ob[c], g);
+			days.Add(index);
 		}
+		days.Sort();
 
-		if (Gcd(n, m) == 1)
-		{
-			var max_c = 2 * (int)Math.Max(n, m);
-			var oa = ToOrder(a, max_c);
-			var ob = ToOrder(b, max_c);
-
-			var days = new List<long>();
-			for (int c = 1; c <= max_c; c++)
-			{
-				if (oa[c] == -1 || ob[c] == -1) continue;
-
-				var index = Crt(n, m, oa[c], ob[c]);
-				days.Add(index);
-			}
-			days.Sort();
-
-			return KthFalseDay(k - 1, n * m, days.ToArray()) + 1;
-		}
-		else
-		{
-			var g = Gcd(n, m);
-			var nm = Lcm(n, m);
-
-			var max_c = 2 * (int)Math.Max(n, m);
-			var oa = ToOrder(a, max_c);
-			var ob = ToOrder(b, max_c);
-
-			var days = new List<long>();
-			for (int c = 1; c <= max_c; c++)
-			{
-				if (oa[c] == -1 || ob[c] == -1) continue;
-				if (oa[c] % g != ob[c] % g) continue;
-
-				var index = Crt2(n, m, oa[c], ob[c], g);
-				days.Add(index);
-			}
-			days.Sort();
-
-			return KthFalseDay(k - 1, nm, days.ToArray()) + 1;
-		}
-
-		throw new InvalidOperationException();
+		return KthFalseDay(k - 1, l, days.ToArray()) + 1;
 	}
 
-	static int[] ToOrder(int[] a, int max)
+	static int[] ToOrderMap(int[] a, int max)
 	{
 		var o = Array.ConvertAll(new bool[max + 1], _ => -1);
 		for (int i = 0; i < a.Length; ++i) o[a[i]] = i;
