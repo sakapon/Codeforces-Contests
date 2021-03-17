@@ -3,18 +3,17 @@ using System.Linq;
 
 class D
 {
-	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	static void Main() => Console.WriteLine(Solve());
+	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var n = long.Parse(Console.ReadLine());
 
-		return string.Join(" ", a);
+		var r = 0;
+		for (long x = 3; ; x += 2)
+		{
+			var c = (x * x + 1) / 2;
+			if (c > n) return r;
+			r++;
+		}
 	}
 }

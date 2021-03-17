@@ -1,23 +1,46 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 class C
 {
-	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var n2 = (n - 1) / 2;
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var r = new int[n, n];
+
+		for (int k = 1; k <= n2; k++)
+		{
+			for (int i = 0; i < n; i++)
+			{
+				// i defeates i+k
+				var j = (i + k) % n;
+				if (i < j)
+					r[i, j] = 1;
+				else
+					r[j, i] = -1;
+			}
+		}
+
+		if (n % 2 == 0)
+		{
+			for (int i = 0; i < n / 2; i++)
+			{
+				// tie
+				r[i, i + n / 2] = 0;
+			}
+		}
+		else
+		{
+		}
+
+		var l = new List<int>();
+		for (int i = 0; i < n; i++)
+			for (int j = i + 1; j < n; j++)
+				l.Add(r[i, j]);
+		return string.Join(" ", l);
 	}
 }
