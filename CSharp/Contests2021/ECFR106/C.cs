@@ -4,8 +4,6 @@ using System.Linq;
 class C
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
@@ -29,25 +27,15 @@ class C
 	static long[] Sum(int n, int[] c)
 	{
 		var r = new long[c.Length];
-		var s = new CumSum(c);
+		var s = 0L;
 		var min = 1L << 30;
 
 		for (int i = 0; i < c.Length; i++)
 		{
+			s += c[i];
 			min = Math.Min(min, c[i]);
-			r[i] = s.Sum(0, i + 1) + (n - 1 - i) * min;
+			r[i] = s + (n - 1 - i) * min;
 		}
 		return r;
 	}
-}
-
-class CumSum
-{
-	long[] s;
-	public CumSum(int[] a)
-	{
-		s = new long[a.Length + 1];
-		for (int i = 0; i < a.Length; ++i) s[i + 1] = s[i] + a[i];
-	}
-	public long Sum(int l_in, int r_ex) => s[r_ex] - s[l_in];
 }
