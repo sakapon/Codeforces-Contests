@@ -4,20 +4,17 @@ using System.Linq;
 class A
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
+	static void Main() => Console.WriteLine(Solve());
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var r = Read();
+		var b = Read();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var w = Enumerable.Range(0, n).Count(i => r[i] == 1 && b[i] == 0);
+		var l = Enumerable.Range(0, n).Count(i => r[i] == 0 && b[i] == 1);
+
+		if (w == 0) return -1;
+		return l / w + 1;
 	}
 }
