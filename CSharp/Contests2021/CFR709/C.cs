@@ -5,19 +5,48 @@ class C
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var (n, m) = Read2();
+		var fss = Array.ConvertAll(new bool[m], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var m2 = (m + 1) / 2;
+
+		var counts = new int[n + 1];
+		foreach (var fs in fss)
+		{
+			if (fs[0] == 1)
+			{
+				counts[fs[1]]++;
+			}
+		}
+		if (counts.Any(x => x > m2)) return "NO";
+
+		var r = new int[m];
+		for (int i = 0; i < m; i++)
+		{
+			var fs = fss[i];
+			if (fs[0] == 1)
+				r[i] = fs[1];
+		}
+
+		for (int i = 0; i < m; i++)
+		{
+			var fs = fss[i];
+			if (fs[0] == 1) continue;
+
+			for (int j = 1; j <= fs[0]; j++)
+			{
+				var f = fs[j];
+				if (counts[f] + 1 > m2) continue;
+
+				r[i] = f;
+				counts[f]++;
+				break;
+			}
+		}
+
+		return "YES\n" + string.Join(" ", r);
 	}
 }

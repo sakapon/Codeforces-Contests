@@ -12,12 +12,20 @@ class B
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		if (n == 1) return 0;
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var d = Enumerable.Range(0, n - 1).Select(i => a[i + 1] - a[i])
+			.Distinct()
+			.ToArray();
+		if (d.Length == 1) return 0;
+		if (d.Length > 2) return -1;
+
+		var c1 = d.Min();
+		var c2 = d.Max();
+		var m = c2 - c1;
+
+		if (m <= a.Max()) return -1;
+		return $"{m} {c2}";
 	}
 }

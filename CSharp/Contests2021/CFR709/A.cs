@@ -11,13 +11,7 @@ class A
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
-
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var (a, b) = Read2();
+		return a * b;
 	}
 }
