@@ -16,7 +16,7 @@ class D
 		{
 			var q = Math.DivRem(div + d, c, out var rem);
 			if (rem != 0) continue;
-			r += 1L << Factorize(q).Distinct().Count();
+			r += 1L << pt[q];
 		}
 		return r;
 	}
@@ -37,5 +37,15 @@ class D
 		for (long x = 2; x * x <= n && n > 1; ++x) while (n % x == 0) { r.Add(x); n /= x; }
 		if (n > 1) r.Add(n);
 		return r.ToArray();
+	}
+
+	static int[] pt = GetPrimeTypes(20000000);
+
+	// n 以下のすべての数に対する、素因数の種類の数 O(n)?
+	static int[] GetPrimeTypes(int n)
+	{
+		var t = new int[n + 1];
+		for (int p = 2; p <= n; ++p) if (t[p] == 0) for (int x = p; x <= n; x += p) ++t[x];
+		return t;
 	}
 }
