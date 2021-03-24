@@ -28,22 +28,14 @@ class C
 		{
 			var fs = fss[i];
 			if (fs[0] == 1)
-				r[i] = fs[1];
-		}
-
-		for (int i = 0; i < m; i++)
-		{
-			var fs = fss[i];
-			if (fs[0] == 1) continue;
-
-			for (int j = 1; j <= fs[0]; j++)
 			{
-				var f = fs[j];
-				if (counts[f] + 1 > m2) continue;
-
-				r[i] = f;
-				counts[f]++;
-				break;
+				r[i] = fs[1];
+			}
+			else
+			{
+				var nf = fs.Skip(1).First(f => counts[f] + 1 <= m2);
+				counts[nf]++;
+				r[i] = nf;
 			}
 		}
 
