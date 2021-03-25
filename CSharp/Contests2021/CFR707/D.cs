@@ -17,25 +17,24 @@ class D
 		var l = Lcm(n, m);
 
 		var cmax = 2 * (int)Math.Max(n, m);
-		var oa = ToOrderMap(a, cmax);
-		var ob = ToOrderMap(b, cmax);
+		var a_ = ToInverseMap(a, cmax);
+		var b_ = ToInverseMap(b, cmax);
 
 		var days = new List<long>();
 		for (int c = 1; c <= cmax; c++)
 		{
-			if (oa[c] == -1) continue;
-			if (ob[c] == -1) continue;
-			if (oa[c] % g != ob[c] % g) continue;
+			var (i, j) = (a_[c], b_[c]);
+			if (i == -1 || j == -1) continue;
+			if (i % g != j % g) continue;
 
-			var index = Crt2(n, m, oa[c], ob[c], g);
-			days.Add(index);
+			days.Add(Crt2(n, m, i, j, g));
 		}
 		days.Sort();
 
 		return KthFalseDay(k - 1, l, days.ToArray()) + 1;
 	}
 
-	static int[] ToOrderMap(int[] a, int max)
+	static int[] ToInverseMap(int[] a, int max)
 	{
 		var o = Array.ConvertAll(new bool[max + 1], _ => -1);
 		for (int i = 0; i < a.Length; ++i) o[a[i]] = i;
