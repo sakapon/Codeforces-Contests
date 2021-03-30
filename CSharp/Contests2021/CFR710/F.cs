@@ -4,17 +4,27 @@ using System.Linq;
 class F
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	static void Main() => Console.WriteLine(Solve());
+	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var r = Read();
+		var c = Read();
 
-		return string.Join(" ", a);
+		var ps = r.Zip(c).OrderBy(t => t.First).Prepend((1, 1)).ToArray();
+
+		return Enumerable.Range(1, n).Sum(i =>
+		{
+			if (ps[i - 1] == ps[i]) return 0;
+
+			var (r1, c1) = ps[i - 1];
+			var (r2, c2) = ps[i];
+
+			var groupDelta = (r2 - c2) / 2 - (r1 - c1) / 2;
+			if (groupDelta > 0) return groupDelta;
+
+			if ((r1 + c1) % 2 == 1 || (r2 + c2) % 2 == 1) return 0;
+			return r2 - r1;
+		});
 	}
 }

@@ -3,21 +3,25 @@ using System.Linq;
 
 class C
 {
-	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var a = Console.ReadLine();
+		var b = Console.ReadLine();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		if (a.Length > b.Length) (a, b) = (b, a);
+		var n = a.Length;
+		var m = b.Length;
+
+		for (int length = n; length > 0; length--)
+		{
+			for (int i = 0; i <= n - length; i++)
+			{
+				var sub = a.Substring(i, length);
+				if (b.Contains(sub))
+					return n + m - 2 * length;
+			}
+		}
+		return n + m;
 	}
 }

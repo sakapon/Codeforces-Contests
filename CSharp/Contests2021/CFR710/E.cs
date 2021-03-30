@@ -1,20 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 class E
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	static void Main() => Console.WriteLine(Solve());
+	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		return string.Join(" ", a);
+		var r1 = a.ToArray();
+		var r2 = a.ToArray();
+
+		var q1 = new Queue<int>();
+		var q2 = PQ<int>.Create(true);
+		var t = 0;
+
+		for (int i = 0; i < n; i++)
+		{
+			if (t == a[i])
+			{
+				r1[i] = q1.Dequeue();
+				r2[i] = q2.Pop();
+			}
+			else
+			{
+				for (t++; t < a[i]; t++)
+				{
+					q1.Enqueue(t);
+					q2.Push(t);
+				}
+			}
+		}
+
+		return string.Join(" ", r1) + "\n" + string.Join(" ", r2);
 	}
 }
