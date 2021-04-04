@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 class D
 {
@@ -27,47 +26,28 @@ class D
 			}
 
 			var (b, i, j) = Next(a);
-			Console.WriteLine($"{b} {i} {j }");
+			Console.WriteLine($"{b} {i} {j}");
 		}
 
-		(int b, int i, int j) Next(int a)
+		(int, int, int) Next(int a)
 		{
 			if (a == a0)
 			{
-				if (qs[0].Any())
-				{
-					var (i, j) = qs[0].Dequeue();
-					return (b01[0], i, j);
-				}
-				else
-				{
-					var (i, j) = qs[1].Dequeue();
-					return (b01[1], i, j);
-				}
-			}
-			else if (a == b01[1])
-			{
-				if (qs[0].Any())
-				{
-					var (i, j) = qs[0].Dequeue();
-					return (b01[0], i, j);
-				}
-				else
-				{
-					var (i, j) = qs[1].Dequeue();
-					return (a0, i, j);
-				}
+				var qi = qs[0].Count > 0 ? 0 : 1;
+				var (i, j) = qs[qi].Dequeue();
+				return (b01[qi], i, j);
 			}
 			else
 			{
-				if (qs[1].Any())
+				var qi = a == b01[1] ? 0 : 1;
+				if (qs[qi].Count > 0)
 				{
-					var (i, j) = qs[1].Dequeue();
-					return (b01[1], i, j);
+					var (i, j) = qs[qi].Dequeue();
+					return (b01[qi], i, j);
 				}
 				else
 				{
-					var (i, j) = qs[0].Dequeue();
+					var (i, j) = qs[1 - qi].Dequeue();
 					return (a0, i, j);
 				}
 			}
