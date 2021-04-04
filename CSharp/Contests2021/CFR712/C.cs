@@ -12,12 +12,33 @@ class C
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
 		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var c0 = s.Count(c => c == '0');
+		var c1 = n - c0;
+
+		if (c0 % 2 != 0) return "NO";
+		if (s[0] != '1') return "NO";
+		if (s[^1] != '1') return "NO";
+
+		var rn = Enumerable.Range(0, n).ToArray();
+		var r1 = new char[n];
+		foreach (var j in rn.Where(i => s[i] == '1').Take(c1 / 2))
+			r1[j] = '(';
+		foreach (var j in rn.Where(i => s[i] == '1').Skip(c1 / 2))
+			r1[j] = ')';
+
+		var r2 = (char[])r1.Clone();
+
+		var f = false;
+		for (int i = 0; i < n; i++)
+		{
+			if (s[i] == '1') continue;
+			r1[i] = f ? '(' : ')';
+			r2[i] = f ? ')' : '(';
+			f = !f;
+		}
+
+		return "YES\n" + $"{new string(r1)}\n{new string(r2)}";
 	}
 }
