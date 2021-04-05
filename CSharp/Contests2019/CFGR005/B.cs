@@ -1,23 +1,36 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 
 class B
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
+	static void Main() => Console.WriteLine(Solve());
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var b = Read();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var r = 0;
+		var q = new Queue<int>(b);
+		var u = new bool[n + 1];
+
+		foreach (var x in a)
+		{
+			if (u[x]) continue;
+
+			while (q.Peek() != x)
+			{
+				var y = q.Dequeue();
+				if (u[y]) continue;
+
+				r++;
+				u[y] = true;
+			}
+
+			q.Dequeue();
+			u[x] = true;
+		}
+		return r;
 	}
 }
