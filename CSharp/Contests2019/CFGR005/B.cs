@@ -21,10 +21,8 @@ class B
 
 			while (q.Peek() != x)
 			{
-				var y = q.Dequeue();
-				if (u[y]) continue;
-
 				r++;
+				var y = q.Dequeue();
 				u[y] = true;
 			}
 
