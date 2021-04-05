@@ -17,19 +17,17 @@ class D
 
 		var a2 = a.Concat(a).Concat(a).ToArray();
 		var q = PQ<int>.CreateWithKey(i => a2[i], true);
-		var end = Array.ConvertAll(new bool[a2.Length], _ => 1 << 30);
+		var end = new int[a2.Length];
 
 		for (int i = 0; i < a2.Length; i++)
 		{
 			while (q.Any() && (q.First.Key + 1) / 2 > a2[i])
-				end[q.Pop().Value] = i;
+			{
+				var i0 = q.Pop().Value;
+				for (int j = i0; j >= 0 && end[j] == 0; j--)
+					end[j] = i;
+			}
 			q.Push(i);
-		}
-
-		for (int i = a2.Length - 2; i >= 0; i--)
-		{
-			if (end[i] > end[i + 1])
-				end[i] = end[i + 1];
 		}
 
 		return string.Join(" ", end.Take(n).Select((x, i) => x - i));
