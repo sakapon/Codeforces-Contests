@@ -25,32 +25,18 @@ class D
 				b01 = Array.FindAll(new[] { 1, 2, 3 }, x => x != a);
 			}
 
-			var (b, i, j) = Next(a);
+			var (b, qi) = Next(a);
+			var (i, j) = qs[qi].Dequeue();
 			Console.WriteLine($"{b} {i} {j}");
 		}
 
-		(int, int, int) Next(int a)
+		(int, int) Next(int a)
 		{
-			if (a == a0)
-			{
-				var qi = qs[0].Count > 0 ? 0 : 1;
-				var (i, j) = qs[qi].Dequeue();
-				return (b01[qi], i, j);
-			}
-			else
-			{
-				var qi = a == b01[1] ? 0 : 1;
-				if (qs[qi].Count > 0)
-				{
-					var (i, j) = qs[qi].Dequeue();
-					return (b01[qi], i, j);
-				}
-				else
-				{
-					var (i, j) = qs[1 - qi].Dequeue();
-					return (a0, i, j);
-				}
-			}
+			if (qs[1].Count == 0) return (a == a0 ? b01[0] : a0, 0);
+			if (qs[0].Count == 0) return (a == a0 ? b01[1] : a0, 1);
+
+			var qi = a == b01[1] ? 0 : 1;
+			return (b01[qi], qi);
 		}
 	}
 }
