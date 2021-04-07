@@ -56,36 +56,48 @@ class E
 			}
 		}
 
+		var a = l.ToArray();
+		n = a.Length;
+
+		var dp = new long[n];
+		dp[0] = a[0].b;
+
+		for (int i = 1; i < n; i++)
 		{
-			var ln = l.Last;
-			if (ln.Value.b >= 0) ln = ln.Previous;
-
-			for (; ln != null;)
+			var (h, b) = a[i];
+			if (b >= 0)
 			{
-				var ln1 = ln.Previous?.Previous;
-				var ln2 = ln.Next?.Next;
-				var sum1 = ln1 == null || ln1.Value.h > ln.Value.h ? 0 : ln.Value.b + ln.Previous.Value.b;
-				var sum2 = ln2 == null || ln2.Value.h > ln.Value.h ? 0 : ln.Value.b + ln.Next.Value.b;
-
-				if (sum1 <= sum2 && sum1 < 0)
+				// 右から消される場合
+				if (i - 2 < 0)
 				{
-					l.Remove(ln.Previous);
-					l.Remove(ln);
-					ln = ln2 != null ? ln2 : ln1;
-				}
-				else if (sum1 > sum2 && sum2 < 0)
-				{
-					l.Remove(ln.Next);
-					l.Remove(ln);
-					ln = ln2;
+					dp[i] = dp[i - 1] + b;
 				}
 				else
 				{
-					ln = ln1;
+					dp[i] = Math.Max(dp[i - 2], dp[i - 2] + a[i - 1].b + b);
+				}
+			}
+			else
+			{
+				if (i - 2 < 0)
+				{
+					dp[i] = dp[i - 1] + b;
+				}
+				else
+				{
+					if (a[i - 2].h < h)
+					{
+						dp[i] = Math.Max(dp[i - 2], dp[i - 2] + a[i - 1].b + b);
+					}
+					else
+					{
+						dp[i] = Math.Max(b, dp[i - 1] + b);
+					}
 				}
 			}
 		}
 
-		return l.Sum(t => t.b);
+		if (a[^1].b < 0 || n < 2) return dp[^1];
+		return dp[^2] + a[^1].b;
 	}
 }
