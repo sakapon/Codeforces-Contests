@@ -60,26 +60,28 @@ class E
 			var ln = l.Last;
 			if (ln.Value.b >= 0) ln = ln.Previous;
 
-			for (; ln != null; ln = ln.Previous?.Previous)
+			for (; ln != null;)
 			{
-				if (ln.Next?.Next == null) continue;
+				var ln1 = ln.Previous?.Previous;
+				var ln2 = ln.Next?.Next;
+				var sum1 = ln1 == null || ln1.Value.h > ln.Value.h ? 0 : ln.Value.b + ln.Previous.Value.b;
+				var sum2 = ln2 == null || ln2.Value.h > ln.Value.h ? 0 : ln.Value.b + ln.Next.Value.b;
 
-				var ln2 = ln.Next.Next;
-				var (h1, b1) = ln.Value;
-				var (h2, b2) = ln2.Value;
-
-				if (h1 < h2)
+				if (sum1 <= sum2 && sum1 < 0)
 				{
-					if (b2 + ln.Next.Value.b >= 0) continue;
-					l.Remove(ln.Next);
-					l.Remove(ln.Next);
+					l.Remove(ln.Previous);
+					l.Remove(ln);
+					ln = ln2 != null ? ln2 : ln1;
 				}
-				else
+				else if (sum1 > sum2 && sum2 < 0)
 				{
-					if (b1 + ln.Next.Value.b >= 0) continue;
 					l.Remove(ln.Next);
 					l.Remove(ln);
 					ln = ln2;
+				}
+				else
+				{
+					ln = ln1;
 				}
 			}
 		}
