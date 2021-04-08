@@ -13,58 +13,37 @@ class E
 		var hs = Read();
 		var bs = ReadL();
 
-		var l = new LinkedList<(int h, long b)>(hs.Zip(bs));
+		var l = new List<(int h, long b)>();
 
-		for (var ln = l.Last.Previous; ln != null; ln = ln.Previous)
+		foreach (var (h, b) in hs.Zip(bs))
 		{
-			var ln2 = ln.Next;
-			var (h1, b1) = ln.Value;
-			var (h2, b2) = ln2.Value;
-
-			if (b1 >= 0)
+			if (l.Count == 0)
 			{
-				if (b2 >= 0) continue;
-				if (h1 > h2) continue;
-				l.Remove(ln2);
+				l.Add((h, b));
+			}
+			else if (b > 0)
+			{
+				var (h0, b0) = l[^1];
+				if (h0 > h && b0 <= 0) l.RemoveAt(l.Count - 1);
+				l.Add((h, b));
 			}
 			else
 			{
-				if (b2 >= 0)
-				{
-					if (h1 < h2) continue;
-					l.Remove(ln);
-					ln = ln2;
-				}
-				else
-				{
-					if (h1 > h2) (ln, ln2) = (ln2, ln);
-					l.Remove(ln2);
-				}
+				var (h0, b0) = l[^1];
+				if (h0 < h) continue;
+				if (b0 <= 0) l.RemoveAt(l.Count - 1);
+				l.Add((h, b));
 			}
 		}
 
-		for (var ln = l.Last.Previous; ln != null; ln = ln.Previous)
-		{
-			var ln2 = ln.Next;
-			var (h1, b1) = ln.Value;
-			var (h2, b2) = ln2.Value;
-
-			if (b1 >= 0 && b2 >= 0)
-			{
-				ln.Value = (Math.Min(h1, h2), b1 + b2);
-				l.Remove(ln2);
-			}
-		}
-
-		var a = l.ToArray();
-		n = a.Length;
+		n = l.Count;
 
 		var dp = new long[n];
-		dp[0] = a[0].b;
+		dp[0] = l[0].b;
 
 		for (int i = 1; i < n; i++)
 		{
-			var (h, b) = a[i];
+			var (h, b) = l[i];
 			if (b >= 0)
 			{
 				// 右から消される場合
@@ -74,7 +53,7 @@ class E
 				}
 				else
 				{
-					dp[i] = Math.Max(dp[i - 2], dp[i - 2] + a[i - 1].b + b);
+					dp[i] = Math.Max(dp[i - 2], dp[i - 2] + l[i - 1].b + b);
 				}
 			}
 			else
@@ -85,9 +64,9 @@ class E
 				}
 				else
 				{
-					if (a[i - 2].h < h)
+					if (l[i - 2].h < h)
 					{
-						dp[i] = Math.Max(dp[i - 2], dp[i - 2] + a[i - 1].b + b);
+						dp[i] = Math.Max(dp[i - 2], dp[i - 2] + l[i - 1].b + b);
 					}
 					else
 					{
@@ -97,7 +76,7 @@ class E
 			}
 		}
 
-		if (a[^1].b < 0 || n < 2) return dp[^1];
-		return dp[^2] + a[^1].b;
+		if (l[^1].b < 0 || n < 2) return dp[^1];
+		return dp[^2] + l[^1].b;
 	}
 }
