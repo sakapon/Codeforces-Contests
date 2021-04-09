@@ -13,22 +13,22 @@ class E
 		var es = Array.ConvertAll(new bool[m], _ => (Edge)Read());
 
 		var map = new WeightedMap(n + 1, es, false);
-		var idMap = new List<(int v, int w)>(Enumerable.Range(0, n + 1).Select(i => (i, 0)));
 
 		var id = n;
-		var used = new int[n + 1, 51];
+		var idMap = new int[n + 1, 51];
+		var idMap_r = new List<(int v, long w)>(Enumerable.Range(0, n + 1).Select(i => (i, 0L)));
 
-		int GetId(int v, int w)
+		void InitId(int v, long w)
 		{
-			if (used[v, w] != 0) return used[v, w];
-			idMap.Add((v, w));
-			return used[v, w] = ++id;
+			if (idMap[v, w] != 0) return;
+			idMap[v, w] = ++id;
+			idMap_r.Add((v, w));
 		}
 
-		foreach (var (u, v, w) in es)
+		foreach (var (v, u, w) in es)
 		{
-			GetId(u, (int)w);
-			GetId(v, (int)w);
+			InitId(v, w);
+			InitId(u, w);
 		}
 
 		// 辺を静的に構築すると MLE。
@@ -36,11 +36,11 @@ class E
 		{
 			if (v <= n)
 			{
-				return Array.ConvertAll(map[v], e => new Edge(v, used[e.To, e.Cost], 0));
+				return Array.ConvertAll(map[v], e => new Edge(v, idMap[e.To, e.Cost], 0));
 			}
 			else
 			{
-				var (v0, w) = idMap[v];
+				var (v0, w) = idMap_r[v];
 				return Array.ConvertAll(map[v0], e => new Edge(v, e.To, (w + e.Cost) * (w + e.Cost)));
 			}
 		}, 1);
