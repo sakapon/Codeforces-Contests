@@ -12,12 +12,22 @@ class B
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		for (int i = 0; i < 30; i++)
+		{
+			var f = 1 << i;
+			if (a.All(x => (x & f) != 0))
+			{
+				a = Array.ConvertAll(a, x => x - f);
+			}
+		}
+
+		var c0 = a.Count(x => x == 0);
+		if (c0 < 2) return 0;
+		return (long)c0 * (c0 - 1) % M * MFactorial(n - 2) % M;
 	}
+
+	const long M = 1000000007;
+	static long MFactorial(int n) { for (long x = 1, i = 1; ; x = x * ++i % M) if (i >= n) return x; }
 }
