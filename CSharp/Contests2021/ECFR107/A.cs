@@ -12,12 +12,8 @@ class A
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var r = Read();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		return r.Count(x => x != 2);
 	}
 }
