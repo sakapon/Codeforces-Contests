@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-class F
+class F2
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int i, int j) Read2() { var a = Read(); return (a[0], a[1]); }
@@ -16,30 +16,19 @@ class F
 		var bs = ps.GroupBy(p => p.j)
 			.Select(g => (j: g.Key, f: 3 - g.Sum(p => p.i)))
 			.OrderBy(t => t.j)
-			.Prepend((j: 0, f: 0))
 			.ToArray();
 
-		// empty が 2 列続く場合は削除 (左に詰める)
-		for (int k = 1; k < bs.Length; k++)
+		for (int i = 1; i < bs.Length; i++)
 		{
-			var (j, f) = bs[k];
-			var d = j - bs[k - 1].j - 1;
-			d = d / 2 * 2;
-			bs[k] = (j - d, f);
-		}
+			var (j, f) = bs[i];
+			var (j0, f0) = bs[i - 1];
 
-		var cols = Array.ConvertAll(new bool[bs[^1].j + 1], _ => 3);
-		foreach (var (j, f) in bs)
-		{
-			cols[j] = f;
-		}
+			if (f0 > 0 && (j - j0) % 2 == 0) f0 ^= 3;
+			if ((f & f0) != f0) return false;
 
-		for (int j = 1; j < cols.Length; j++)
-		{
-			if ((cols[j] & cols[j - 1]) != cols[j - 1]) return false;
-			cols[j] -= cols[j - 1];
-			if (cols[j] == 3) cols[j] = 0;
+			f -= f0;
+			bs[i] = (j, f == 3 ? 0 : f);
 		}
-		return cols[^1] == 0;
+		return bs[^1].f == 0;
 	}
 }
