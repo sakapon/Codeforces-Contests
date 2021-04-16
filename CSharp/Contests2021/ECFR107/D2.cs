@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-class D
+class D2
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
@@ -30,18 +30,27 @@ class D
 		var k2 = k * k;
 
 		var u = new bool[k, k];
-		var l = new List<int> { 0 };
+		var l = new Stack<int>();
 
-		for (int p = 1, t = 0; p < k2; p++)
+		bool Dfs(int v)
 		{
-			for (int j = k - 1; j >= 0; j--)
+			for (int j = 0; j < k; j++)
 			{
-				if (u[t, j]) continue;
-				u[t, j] = true;
-				l.Add(t = j);
-				break;
+				if (u[v, j]) continue;
+				u[v, j] = true;
+				l.Push(j);
+
+				if (l.Count == k2) return true;
+				var r = Dfs(j);
+				if (r) return true;
+
+				u[v, j] = false;
+				l.Pop();
 			}
+			return false;
 		}
+
+		Dfs(0);
 		return string.Join("", l.Select(i => (char)(i + 'a')));
 	}
 }
