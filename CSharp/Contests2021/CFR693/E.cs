@@ -9,29 +9,28 @@ class E
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var ps = Enumerable.Range(1, n).Select(i =>
+		var ps = Enumerable.Range(0, n).Select(i =>
 		{
 			var (h, w) = Read2();
 			return h > w ? (i, h: w, w: h) : (i, h, w);
 		}).ToArray();
 
 		var r = new int[n];
-		var min = (i: 0, h: 1 << 30, w: 1 << 30);
+		var min = (i: 0, w: 1 << 30);
 
 		var q = ps.OrderBy(t => t.h).ThenBy(t => -t.w);
-		foreach (var (i, h, w) in q)
+		foreach (var (i, _, w) in q)
 		{
 			if (min.w < w)
 			{
-				r[i - 1] = min.i;
+				r[i] = min.i + 1;
 			}
 			else
 			{
-				r[i - 1] = -1;
-				min = (i, h, w);
+				r[i] = -1;
+				min = (i, w);
 			}
 		}
-
 		return string.Join(" ", r);
 	}
 }

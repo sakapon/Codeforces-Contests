@@ -12,69 +12,50 @@ class F
 		var (n, m) = Read2();
 		var ps = Array.ConvertAll(new bool[m], _ => Read2());
 
-		var cols = ps
-			.Append((1, j: 0))
-			.Append((2, j: 0))
-			.GroupBy(p => p.j)
-			.Select(g =>
-			{
-				var (b1, b2) = (false, false);
-				foreach (var (i, _) in g)
-					if (i == 1) b1 = true;
-					else b2 = true;
-				return (j: g.Key, b1, b2);
-			})
+		// unblocked: flagged
+		var bs = ps.GroupBy(p => p.j)
+			.Select(g => (j: g.Key, f: 3 - g.Sum(p => p.i)))
 			.OrderBy(t => t.j)
+			.Prepend((j: 0, f: 0))
 			.ToArray();
 
 		// WW が 2 列続く場合は削除
-		for (int k = 1; k < cols.Length; k++)
+		for (int k = 1; k < bs.Length; k++)
 		{
-			var (j, b1, b2) = cols[k];
-			var d = j - cols[k - 1].j - 1;
+			var (j, f) = bs[k];
+			var d = j - bs[k - 1].j - 1;
 			d = d / 2 * 2;
-			cols[k] = (j - d, b1, b2);
+			bs[k] = (j - d, f);
 		}
 
-		var grid = NewArray2(cols[^1].j + 1, 2, true);
-		foreach (var (j, b1, b2) in cols)
+		var cols = Array.ConvertAll(new bool[bs[^1].j + 1], _ => 3);
+		foreach (var (j, f) in bs)
 		{
-			grid[j][0] = !b1;
-			grid[j][1] = !b2;
+			cols[j] = f;
 		}
 
-		var tb = new[] { false, false };
-		for (int i = 0; i < grid.Length; i++)
+		var t = 0;
+		foreach (var f in cols)
 		{
-			if (!grid[i][0] && !grid[i][1])
+			if (f == 0)
 			{
-				if (tb[0] ^ tb[1]) return false;
+				if (t > 0) return false;
 			}
-			else if (grid[i][0] && grid[i][1])
+			else if (f == 1)
 			{
-				if (tb[0] ^ tb[1])
-				{
-					tb[0] ^= true;
-					tb[1] ^= true;
-				}
+				if (t == 2) return false;
+				t ^= f;
 			}
-			else if (grid[i][0])
+			else if (f == 2)
 			{
-				if (tb[1]) return false;
-				tb[0] ^= grid[i][0];
-				tb[1] ^= grid[i][1];
+				if (t == 1) return false;
+				t ^= f;
 			}
 			else
 			{
-				if (tb[0]) return false;
-				tb[0] ^= grid[i][0];
-				tb[1] ^= grid[i][1];
+				if (t > 0) t ^= f;
 			}
 		}
-		if (tb[0] ^ tb[1]) return false;
-
-		return true;
+		return t == 0;
 	}
-
-	static T[][] NewArray2<T>(int n1, int n2, T v = default) => Array.ConvertAll(new bool[n1], _ => Array.ConvertAll(new bool[n2], __ => v));
 }

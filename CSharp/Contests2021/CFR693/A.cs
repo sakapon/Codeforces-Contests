@@ -10,16 +10,12 @@ class A
 	{
 		var (w, h, n) = Read3();
 
+		w *= h;
 		var r = 1;
 
 		while (w % 2 == 0)
 		{
 			w /= 2;
-			r *= 2;
-		}
-		while (h % 2 == 0)
-		{
-			h /= 2;
 			r *= 2;
 		}
 		return r >= n;
