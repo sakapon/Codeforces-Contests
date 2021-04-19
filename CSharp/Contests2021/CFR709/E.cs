@@ -13,70 +13,83 @@ class E
 		var hs = Read();
 		var bs = ReadL();
 
-		var l = new List<(int h, long b)>();
+		// 負の建物が低い建物に含まれる場合の部分和
+		var segs = new List<(int l, int r, long b)>();
 
-		foreach (var (h, b) in hs.Zip(bs))
+		// 負の建物が右側の低い建物に含まれる場合の部分和
+		// h は単調増加
+		var qr = new Stack<(int l, int h, long b)>();
+		qr.Push((-1, 0, 0));
+
+		for (int i = 0; i < n; i++)
 		{
-			if (l.Count == 0)
-			{
-				l.Add((h, b));
-			}
-			else if (b > 0)
-			{
-				var (h0, b0) = l[^1];
-				if (h0 > h && b0 <= 0) l.RemoveAt(l.Count - 1);
-				l.Add((h, b));
-			}
-			else
-			{
-				var (h0, b0) = l[^1];
-				if (h0 < h) continue;
-				if (b0 <= 0) l.RemoveAt(l.Count - 1);
-				l.Add((h, b));
-			}
-		}
+			var (h, b) = (hs[i], bs[i]);
 
-		n = l.Count;
+			while (qr.Peek().h > h)
+			{
+				var (l0, h0, b0) = qr.Pop();
+				if (b0 < 0) segs.Add((l0, i - 1, b0));
 
-		var dp = new long[n];
-		dp[0] = l[0].b;
+				var (lt, ht, bt) = qr.Pop();
+				qr.Push((lt, ht, bt + b0));
+			}
 
-		for (int i = 1; i < n; i++)
-		{
-			var (h, b) = l[i];
 			if (b >= 0)
 			{
-				// 右から消される場合
-				if (i - 2 < 0)
-				{
-					dp[i] = dp[i - 1] + b;
-				}
-				else
-				{
-					dp[i] = Math.Max(dp[i - 2], dp[i - 2] + l[i - 1].b + b);
-				}
+				var (lt, ht, bt) = qr.Pop();
+				qr.Push((lt, ht, bt + b));
 			}
 			else
 			{
-				if (i - 2 < 0)
-				{
-					dp[i] = dp[i - 1] + b;
-				}
-				else
-				{
-					if (l[i - 2].h < h)
-					{
-						dp[i] = Math.Max(dp[i - 2], dp[i - 2] + l[i - 1].b + b);
-					}
-					else
-					{
-						dp[i] = Math.Max(b, dp[i - 1] + b);
-					}
-				}
+				qr.Push((i, h, b));
 			}
 		}
 
-		if (l[^1].b < 0 || n < 2) return dp[^1];
-		return dp[^2] + l[^1].b;
+		// 負の建物が左側の低い建物に含まれる場合の部分和
+		// h は単調増加
+		var ql = new Stack<(int r, int h, long b)>();
+		ql.Push((n, 0, 0));
+
+		for (int i = n - 1; i >= 0; i--)
+		{
+			var (h, b) = (hs[i], bs[i]);
+
+			while (ql.Peek().h > h)
+			{
+				var (r0, h0, b0) = ql.Pop();
+				if (b0 < 0) segs.Add((i + 1, r0, b0));
+
+				var (rt, ht, bt) = ql.Pop();
+				ql.Push((rt, ht, bt + b0));
+			}
+
+			if (b >= 0)
+			{
+				var (rt, ht, bt) = ql.Pop();
+				ql.Push((rt, ht, bt + b));
+			}
+			else
+			{
+				ql.Push((i, h, b));
+			}
+		}
+
+		var q = new Queue<(int l, int r, long b)>(segs.OrderBy(t => t.l));
+		q.Enqueue((n, n, 0));
+
+		var dp = new long[n + 1];
+
+		for (int i = 0; i < n; i++)
+		{
+			dp[i + 1] = Math.Min(dp[i + 1], dp[i]);
+
+			while (q.Peek().l == i)
+			{
+				var (l, r, b) = q.Dequeue();
+				dp[r + 1] = Math.Min(dp[r + 1], dp[i] + b);
+			}
+		}
+
+		return bs.Sum() - dp[n];
 	}
 }
