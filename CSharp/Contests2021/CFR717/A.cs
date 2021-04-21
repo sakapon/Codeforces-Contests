@@ -11,13 +11,19 @@ class A
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
+		var (n, k) = Read2();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		for (int i = 0; i < n - 1; i++)
+		{
+			while (a[i] > 0)
+			{
+				if (k == 0) return string.Join(" ", a);
+				a[i]--;
+				a[^1]++;
+				k--;
+			}
+		}
+		return string.Join(" ", a);
 	}
 }
