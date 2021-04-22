@@ -27,10 +27,14 @@ class DR
 			{
 				var ai = random.Next(l, r);
 				var b = indexMap[a[ai]];
-				var il = First(0, b.Count, x => b[x] >= l);
-				var ir = First(0, b.Count, x => b[x] >= r);
+				if (2 * b.Count < c + 1) continue;
+
+				var il = First(0, b.Count, j => b[j] >= l);
+				var ir = First(0, b.Count, j => b[j] >= r);
 				var k = ir - il;
-				if (2 * k >= c + 1) return GetPieces(c, k);
+				if (2 * k < c + 1) continue;
+
+				return GetPieces(c, k);
 			}
 			return 1;
 		}
