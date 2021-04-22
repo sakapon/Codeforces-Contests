@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
-class B
+class B2
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
@@ -11,23 +10,17 @@ class B
 		var n = int.Parse(Console.ReadLine());
 		var a = Read();
 
-		var t = 0;
-		var set = new HashSet<int>();
-
-		for (int i = 0; i < n - 1; i++)
+		var u = 0;
+		for (int i = 0; i < n; i++)
 		{
-			set.Add(t ^= a[i]);
-		}
+			u ^= a[i];
+			var t = 0;
+			var c = 1;
 
-		foreach (var x in set)
-		{
-			t = 0;
-			var c = 0;
-
-			for (int i = 0; i < n; i++)
+			for (int j = i + 1; j < n; j++)
 			{
-				t ^= a[i];
-				if (t == x)
+				t ^= a[j];
+				if (t == u)
 				{
 					t = 0;
 					c++;
