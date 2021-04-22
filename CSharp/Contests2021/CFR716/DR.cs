@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 
 class DR
 {
@@ -12,29 +12,24 @@ class DR
 		var qs = Array.ConvertAll(new bool[qc], _ => Read2());
 
 		// 出現するインデックス
-		var indexMap = a.Select((x, i) => (x, i))
-			.GroupBy(t => t.x)
-			.ToDictionary(g => g.Key, g => g.Select(t => t.i).ToArray());
-
-		// [l, r)
-		int GetCount(int x, int l, int r)
-		{
-			var b = indexMap[x];
-			var il = First(0, b.Length, x => b[x] >= l);
-			var ir = First(0, b.Length, x => b[x] >= r);
-			return ir - il;
-		}
+		var indexMap = Array.ConvertAll(new bool[n + 1], _ => new List<int>());
+		for (int i = 0; i < n; i++)
+			indexMap[a[i]].Add(i);
 
 		var random = new Random();
 
+		// [l, r)
 		int ByRandom(int l, int r)
 		{
 			var c = r - l;
 
-			for (int t = 0; t < 28; t++)
+			for (int t = 0; t < 24; t++)
 			{
 				var ai = random.Next(l, r);
-				var k = GetCount(a[ai], l, r);
+				var b = indexMap[a[ai]];
+				var il = First(0, b.Count, x => b[x] >= l);
+				var ir = First(0, b.Count, x => b[x] >= r);
+				var k = ir - il;
 				if (2 * k >= c + 1) return GetPieces(c, k);
 			}
 			return 1;
