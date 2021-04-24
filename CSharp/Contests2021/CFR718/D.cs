@@ -16,32 +16,34 @@ class D
 		k /= 2;
 
 		var dp = NewArray3(k + 1, n, m, 1 << 30);
-
 		for (int i = 0; i < n; i++)
-			for (int j = 0; j < m - 1; j++)
-				for (int q = 0; q <= k; q++)
-				{
-					var v = 2 * q * yoko[i][j];
-					dp[q][i][j] = Math.Min(dp[q][i][j], v);
-					dp[q][i][j + 1] = Math.Min(dp[q][i][j + 1], v);
-				}
-		for (int i = 0; i < n - 1; i++)
 			for (int j = 0; j < m; j++)
-				for (int q = 0; q <= k; q++)
-				{
-					var v = 2 * q * tate[i][j];
-					dp[q][i][j] = Math.Min(dp[q][i][j], v);
-					dp[q][i + 1][j] = Math.Min(dp[q][i + 1][j], v);
-				}
+				dp[0][i][j] = 0;
 
-		for (int q = 2; q <= k; q++)
+		for (int q = 1; q <= k; q++)
 			for (int i = 0; i < n; i++)
 				for (int j = 0; j < m; j++)
 				{
-					if (j > 0) dp[q][i][j] = Math.Min(dp[q][i][j], 2 * yoko[i][j - 1] + dp[q - 1][i][j - 1]);
-					if (j + 1 < m) dp[q][i][j] = Math.Min(dp[q][i][j], 2 * yoko[i][j] + dp[q - 1][i][j + 1]);
-					if (i > 0) dp[q][i][j] = Math.Min(dp[q][i][j], 2 * tate[i - 1][j] + dp[q - 1][i - 1][j]);
-					if (i + 1 < n) dp[q][i][j] = Math.Min(dp[q][i][j], 2 * tate[i][j] + dp[q - 1][i + 1][j]);
+					if (j > 0)
+					{
+						var v = Math.Min(dp[q - 1][i][j], dp[q - 1][i][j - 1]);
+						dp[q][i][j] = Math.Min(dp[q][i][j], 2 * yoko[i][j - 1] + v);
+					}
+					if (j + 1 < m)
+					{
+						var v = Math.Min(dp[q - 1][i][j], dp[q - 1][i][j + 1]);
+						dp[q][i][j] = Math.Min(dp[q][i][j], 2 * yoko[i][j] + v);
+					}
+					if (i > 0)
+					{
+						var v = Math.Min(dp[q - 1][i][j], dp[q - 1][i - 1][j]);
+						dp[q][i][j] = Math.Min(dp[q][i][j], 2 * tate[i - 1][j] + v);
+					}
+					if (i + 1 < n)
+					{
+						var v = Math.Min(dp[q - 1][i][j], dp[q - 1][i + 1][j]);
+						dp[q][i][j] = Math.Min(dp[q][i][j], 2 * tate[i][j] + v);
+					}
 				}
 
 		return string.Join("\n", dp[k].Select(l => string.Join(" ", l)));
