@@ -1,23 +1,39 @@
 ﻿using System;
-using System.Linq;
 
 class C
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
-	static object Solve()
+	static void Main()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var r = NewArray2<int>(n, n);
+
+		for (int k = 0; k < n; k++)
+		{
+			var v = a[k];
+
+			var (i, j) = (k, k);
+			r[i][j] = v;
+
+			for (int m = 1; m < v; m++)
+			{
+				if (j > 0 && r[i][j - 1] == 0)
+				{
+					j--;
+				}
+				else
+				{
+					i++;
+				}
+				r[i][j] = v;
+			}
+		}
+
+		for (int i = 0; i < n; i++)
+			Console.WriteLine(string.Join(" ", r[i][..(i + 1)]));
 	}
+
+	static T[][] NewArray2<T>(int n1, int n2, T v = default) => Array.ConvertAll(new bool[n1], _ => Array.ConvertAll(new bool[n2], __ => v));
 }
