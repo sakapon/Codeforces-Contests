@@ -4,20 +4,34 @@ using System.Linq;
 class B
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var n3 = n / 3;
+
+		var c = new int[3];
+		foreach (var g in a.GroupBy(x => x % 3))
+		{
+			c[g.Key] = g.Count();
+		}
+
+		var r = 0;
+		for (int i = 0; i < 6; i++)
+		{
+			var i1 = i % 3;
+			var i2 = (i + 1) % 3;
+
+			if (c[i1] > n3)
+			{
+				var d = c[i1] - n3;
+				r += d;
+				c[i2] += d;
+				c[i1] = n3;
+			}
+		}
+		return r;
 	}
 }
