@@ -17,21 +17,24 @@ class D
 		{
 			if (l == r) return;
 
-			// argmax
-			var (mi, m) = (-1, 0);
-			for (int i = l; i < r; i++)
-			{
-				if (m < a[i])
-				{
-					(mi, m) = (i, a[i]);
-				}
-			}
-
+			var mi = l + a[l..r].FirstArgMax();
 			ds[mi] = d;
 			Dfs(l, mi, d + 1);
 			Dfs(mi + 1, r, d + 1);
 		}
 
 		return string.Join(" ", ds);
+	}
+}
+
+static class ArrayHelper
+{
+	public static int FirstArgMax(this int[] a)
+	{
+		if (a.Length == 0) throw new ArgumentException();
+		var (mi, mv) = (0, a[0]);
+		for (int i = 1; i < a.Length; i++)
+			if (mv < a[i]) (mi, mv) = (i, a[i]);
+		return mi;
 	}
 }
