@@ -10,11 +10,34 @@ class D
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var a = ReadL();
+		var b = ReadL();
 
-		return string.Join(" ", a);
+		var sum = a.Zip(b, (x, y) => x * y).Sum();
+		var dmax = 0L;
+
+		// 奇数個
+		for (int c = 0; c < n; c++)
+		{
+			var d = 0L;
+			for (var (l, r) = (c, c); l >= 0 && r < n; l--, r++)
+			{
+				d += (a[r] - a[l]) * (b[l] - b[r]);
+				dmax = Math.Max(dmax, d);
+			}
+		}
+
+		// 偶数個
+		for (int c = 0; c < n; c++)
+		{
+			var d = 0L;
+			for (var (l, r) = (c, c + 1); l >= 0 && r < n; l--, r++)
+			{
+				d += (a[r] - a[l]) * (b[l] - b[r]);
+				dmax = Math.Max(dmax, d);
+			}
+		}
+
+		return sum + dmax;
 	}
 }
