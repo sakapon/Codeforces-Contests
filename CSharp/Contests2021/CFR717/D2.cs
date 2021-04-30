@@ -52,9 +52,9 @@ class D2
 			if (l == r) return 0;
 			if (dp[0][l] >= r) return 1;
 
-			var i = 0;
-			while (dp[i + 1][l] < r) i++;
-			return (1 << i) + GetCount(dp[i][l], r);
+			for (int i = 0; ; i++)
+				if (dp[i + 1][l] >= r)
+					return (1 << i) + GetCount(dp[i][l], r);
 		}
 
 		Console.SetOut(new System.IO.StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });

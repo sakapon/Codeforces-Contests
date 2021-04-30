@@ -24,19 +24,19 @@ class D
 			return true;
 		}
 
-		for (int i = 0, j = 0; i < n; i++)
+		for (var (l, r) = (0, 0); r < n; r++)
 		{
-			if (a[i] == 1) continue;
+			if (a[r] == 1) continue;
 
-			while (!IsCoprime(i))
+			while (!IsCoprime(r))
 			{
-				to[j] = i;
-				foreach (var f in afs[j])
+				to[l] = r;
+				foreach (var f in afs[l])
 					ps[f] = false;
-				j++;
+				l++;
 			}
 
-			foreach (var f in afs[i])
+			foreach (var f in afs[r])
 				ps[f] = true;
 		}
 
@@ -75,7 +75,6 @@ class D
 	}
 
 	static T[][] NewArray2<T>(int n1, int n2, T v = default) => Array.ConvertAll(new bool[n1], _ => Array.ConvertAll(new bool[n2], __ => v));
-	static int Gcd(int a, int b) { for (int r; (r = a % b) > 0; a = b, b = r) ; return b; }
 
 	// Distinct
 	static long[] Factorize(long n)
