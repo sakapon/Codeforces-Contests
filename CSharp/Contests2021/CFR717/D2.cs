@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-class D
+class D2
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
@@ -11,33 +11,27 @@ class D
 		var a = Read();
 		var qs = Array.ConvertAll(new bool[qc], _ => Read2());
 
-		var afs = Array.ConvertAll(a, x => Factorize(x));
-
 		// a_i の次のグループのインデックス
 		var to = Array.ConvertAll(new bool[n + 1], _ => n);
-		var ps = new bool[100000];
+		// 各素数の出現したインデックス
+		var ps = Array.ConvertAll(new bool[100000], _ => -1);
 
-		bool IsCoprime(int i)
-		{
-			foreach (var f in afs[i])
-				if (ps[f]) return false;
-			return true;
-		}
-
-		for (int i = 0, j = 0; i < n; i++)
+		for (int i = 0; i < n; i++)
 		{
 			if (a[i] == 1) continue;
-
-			while (!IsCoprime(i))
+			foreach (var f in Factorize(a[i]))
 			{
-				to[j] = i;
-				foreach (var f in afs[j])
-					ps[f] = false;
-				j++;
+				if (ps[f] != -1 && to[ps[f]] == n)
+				{
+					to[ps[f]] = i;
+				}
+				ps[f] = i;
 			}
+		}
 
-			foreach (var f in afs[i])
-				ps[f] = true;
+		for (int i = n - 1; i >= 0; i--)
+		{
+			to[i] = Math.Min(to[i], to[i + 1]);
 		}
 
 		// a_j から 2^i 個目のグループのインデックス
@@ -55,17 +49,12 @@ class D
 		// [l, r)
 		int GetCount(int l, int r)
 		{
-			var c = 1;
-			while (l < r)
-			{
-				var i = -1;
-				while (dp[i + 1][l] < r) i++;
+			if (l == r) return 0;
+			if (dp[0][l] >= r) return 1;
 
-				if (i == -1) break;
-				c += 1 << i;
-				l = dp[i][l];
-			}
-			return c;
+			var i = 0;
+			while (dp[i + 1][l] < r) i++;
+			return (1 << i) + GetCount(dp[i][l], r);
 		}
 
 		Console.SetOut(new System.IO.StreamWriter(Console.OpenStandardOutput()) { AutoFlush = false });
@@ -75,7 +64,6 @@ class D
 	}
 
 	static T[][] NewArray2<T>(int n1, int n2, T v = default) => Array.ConvertAll(new bool[n1], _ => Array.ConvertAll(new bool[n2], __ => v));
-	static int Gcd(int a, int b) { for (int r; (r = a % b) > 0; a = b, b = r) ; return b; }
 
 	// Distinct
 	static long[] Factorize(long n)
