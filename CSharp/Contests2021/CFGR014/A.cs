@@ -11,13 +11,26 @@ class A
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var (n, x) = Read2();
+		var w = Read();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var sum = w.Sum();
+		if (sum == x) return "NO";
+		if (sum < x) return "YES\n" + string.Join(" ", w);
+
+		Array.Sort(w);
+
+		sum = 0;
+		for (int i = 0; i < n; i++)
+		{
+			sum += w[i];
+			if (sum == x)
+			{
+				(w[i], w[i + 1]) = (w[i + 1], w[i]);
+				return "YES\n" + string.Join(" ", w);
+			}
+		}
+
+		return "YES\n" + string.Join(" ", w);
 	}
 }
