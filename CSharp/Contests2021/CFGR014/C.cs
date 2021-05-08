@@ -5,9 +5,7 @@ using System.Linq;
 class C
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
 	static (int, int, int) Read3() { var a = Read(); return (a[0], a[1], a[2]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
@@ -19,15 +17,14 @@ class C
 		var q = PQ<int>.Create(j => t[j]);
 		q.PushRange(Enumerable.Range(0, m).ToArray());
 
-		foreach (var (v, i) in h.Select((v, i) => (v, i)).OrderBy(_ => -_.v))
+		for (int i = 0; i < n; i++)
 		{
 			var j = q.Pop();
 			r[i] = j + 1;
-			t[j] += v;
+			t[j] += h[i];
 			q.Push(j);
 		}
 
-		//if (n == 0) return "NO";
 		return "YES\n" + string.Join(" ", r);
 	}
 }

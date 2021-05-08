@@ -9,8 +9,8 @@ class B
 	{
 		if (values == null)
 		{
-			values = new HashSet<long>();
-			for (long x = 1; x * x <= 4 * 10000000000L; x++)
+			values = new HashSet<int>();
+			for (int x = 1; x * x <= 1000000000 / 2; x++)
 			{
 				var x2 = x * x;
 				values.Add(2 * x2);
@@ -18,9 +18,9 @@ class B
 			}
 		}
 
-		var n = long.Parse(Console.ReadLine());
+		var n = int.Parse(Console.ReadLine());
 		return values.Contains(n);
 	}
 
-	static HashSet<long> values;
+	static HashSet<int> values;
 }
