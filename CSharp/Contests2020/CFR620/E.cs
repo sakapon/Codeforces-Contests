@@ -5,7 +5,6 @@ using System.Linq;
 class E
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
 	static (int, int, int, int, int) Read5() { var a = Read(); return (a[0], a[1], a[2], a[3], a[4]); }
 	static void Main()
 	{
@@ -14,7 +13,8 @@ class E
 		var qc = int.Parse(Console.ReadLine());
 		var qs = Array.ConvertAll(new bool[qc], _ => Read5());
 
-		var lca = new DoublingLca(n + 1, 1, es);
+		var tree = new Tree(n + 1, 1, es);
+		var lca = new BLLca(tree);
 
 		Console.WriteLine(string.Join("\n", qs
 			.Select(q =>
@@ -30,7 +30,7 @@ class E
 	}
 }
 
-class DoublingLca
+public class Tree
 {
 	static List<int>[] ToMap(int n, int[][] es, bool directed)
 	{
@@ -43,72 +43,85 @@ class DoublingLca
 		return map;
 	}
 
-	List<int>[] map;
-	int[] depths;
-	int[][] parents;
+	public int Count { get; }
+	public int Root { get; }
+	public List<int>[] Map { get; }
+	public int[] Depths { get; }
+	public int[] Parents { get; }
 
-	public DoublingLca(int n, int root, List<int>[] _map)
+	public Tree(int n, int root, int[][] ues) : this(n, root, ToMap(n, ues, false)) { }
+	public Tree(int n, int root, List<int>[] map)
 	{
-		map = _map;
-		depths = new int[n];
-		parents = new int[n][];
+		Count = n;
+		Root = root;
+		Map = map;
+		Depths = Array.ConvertAll(Map, _ => -1);
+		Parents = Array.ConvertAll(Map, _ => -1);
 
-		var t = 1;
-		var n2l = new List<int> { t };
-		while ((t <<= 1) <= n) n2l.Add(t);
-		var n2 = n2l.ToArray();
-
-		parents[root] = new int[0];
-		var path = new List<int> { root };
+		Depths[root] = 0;
 		Dfs(root, -1);
 
 		void Dfs(int v, int pv)
 		{
-			var p = Array.ConvertAll(n2, i => i <= path.Count ? path[path.Count - i] : -1);
-
-			foreach (var nv in map[v])
+			foreach (var nv in Map[v])
 			{
 				if (nv == pv) continue;
-
-				depths[nv] = depths[v] + 1;
-				parents[nv] = p;
-				path.Add(nv);
+				Depths[nv] = Depths[v] + 1;
+				Parents[nv] = v;
 				Dfs(nv, v);
-				path.RemoveAt(path.Count - 1);
 			}
 		}
 	}
+}
 
-	public DoublingLca(int n, int root, int[][] es) : this(n, root, ToMap(n, es, false)) { }
+public class BLLca
+{
+	Tree tree;
+	// j から 2^i 番目の親
+	int[][] parents;
+
+	public BLLca(Tree tree)
+	{
+		this.tree = tree;
+		var n = tree.Count;
+
+		var logn = 0;
+		while ((1 << logn) <= n) logn++;
+		parents = new int[logn + 1][];
+		parents[0] = Array.ConvertAll(tree.Parents, v => v == -1 ? tree.Root : v);
+
+		for (int i = 0; i < logn; ++i)
+		{
+			parents[i + 1] = new int[n];
+			for (int j = 0; j < n; ++j)
+				parents[i + 1][j] = parents[i][parents[i][j]];
+		}
+	}
 
 	public int GetAncestor(int v, int depth)
 	{
-		var delta = depths[v] - depth;
+		var delta = tree.Depths[v] - depth;
+		if (delta < 0) throw new ArgumentOutOfRangeException(nameof(depth));
 		if (delta == 0) return v;
-		if (delta < 0) throw new InvalidOperationException();
 
-		for (int i = 0; ; i++, delta >>= 1)
-			if (delta == 1) return GetAncestor(parents[v][i], depth);
+		for (int i = 0; ; ++i, delta >>= 1)
+			if (delta == 1) return GetAncestor(parents[i][v], depth);
 	}
 
 	public int GetLca(int v1, int v2)
 	{
+		var depth = Math.Min(tree.Depths[v1], tree.Depths[v2]);
+		v1 = GetAncestor(v1, depth);
+		v2 = GetAncestor(v2, depth);
+
 		if (v1 == v2) return v1;
-
-		if (depths[v1] != depths[v2])
-		{
-			var md = Math.Min(depths[v1], depths[v2]);
-			return GetLca(GetAncestor(v1, md), GetAncestor(v2, md));
-		}
-
-		if (parents[v1][0] == parents[v2][0]) return parents[v1][0];
-		for (int i = 1; ; i++)
-			if (parents[v1][i] == parents[v2][i]) return GetLca(parents[v1][i - 1], parents[v2][i - 1]);
+		for (int i = 0; ; ++i)
+			if (parents[i + 1][v1] == parents[i + 1][v2]) return GetLca(parents[i][v1], parents[i][v2]);
 	}
 
 	public int GetDistance(int v1, int v2)
 	{
 		var lca = GetLca(v1, v2);
-		return depths[v1] + depths[v2] - 2 * depths[lca];
+		return tree.Depths[v1] + tree.Depths[v2] - 2 * tree.Depths[lca];
 	}
 }
