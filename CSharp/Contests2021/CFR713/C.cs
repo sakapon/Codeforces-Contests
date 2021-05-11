@@ -5,19 +5,93 @@ class C
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var (a, b) = Read2();
+		var n = a + b;
+		var s = Console.ReadLine().ToCharArray();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		void Decr(int i)
+		{
+			if (s[i] == '0') a--;
+			else b--;
+		}
+
+		for (var (i, j) = (0, n - 1); i <= j; i++, j--)
+		{
+			if (i == j)
+			{
+				if (s[i] != '?')
+				{
+					Decr(i);
+				}
+			}
+			else
+			{
+				if (s[i] == s[j])
+				{
+					if (s[i] != '?')
+					{
+						Decr(i);
+						Decr(j);
+					}
+				}
+				else
+				{
+					if (!(s[i] == '?' || s[j] == '?')) return -1;
+
+					if (s[i] == '?')
+					{
+						s[i] = s[j];
+					}
+					else
+					{
+						s[j] = s[i];
+					}
+					Decr(i);
+					Decr(j);
+				}
+			}
+		}
+
+		if (a < 0 || b < 0) return -1;
+
+		for (var (i, j) = (0, n - 1); i <= j; i++, j--)
+		{
+			if (s[i] != '?') continue;
+
+			if (i == j)
+			{
+				if (a >= 1)
+				{
+					s[i] = '0';
+				}
+				else
+				{
+					s[i] = '1';
+				}
+				Decr(i);
+			}
+			else
+			{
+				if (a >= 2)
+				{
+					s[i] = s[j] = '0';
+				}
+				else if (b >= 2)
+				{
+					s[i] = s[j] = '1';
+				}
+				else
+				{
+					return -1;
+				}
+				Decr(i);
+				Decr(j);
+			}
+		}
+
+		return new string(s);
 	}
 }
