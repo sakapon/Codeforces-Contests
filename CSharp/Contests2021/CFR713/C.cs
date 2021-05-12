@@ -15,44 +15,25 @@ class C
 		void Decr(int i)
 		{
 			if (s[i] == '0') a--;
-			else b--;
+			if (s[i] == '1') b--;
 		}
 
+		// 対になる必要条件
 		for (var (i, j) = (0, n - 1); i <= j; i++, j--)
 		{
-			if (i == j)
-			{
-				if (s[i] != '?')
-				{
-					Decr(i);
-				}
-			}
-			else
-			{
-				if (s[i] == s[j])
-				{
-					if (s[i] != '?')
-					{
-						Decr(i);
-						Decr(j);
-					}
-				}
-				else
-				{
-					if (!(s[i] == '?' || s[j] == '?')) return -1;
+			if (i == j) continue;
+			if (s[i] == s[j]) continue;
+			if (s[i] != '?' && s[j] != '?') return -1;
 
-					if (s[i] == '?')
-					{
-						s[i] = s[j];
-					}
-					else
-					{
-						s[j] = s[i];
-					}
-					Decr(i);
-					Decr(j);
-				}
-			}
+			if (s[i] == '?')
+				s[i] = s[j];
+			else
+				s[j] = s[i];
+		}
+
+		for (int i = 0; i < n; i++)
+		{
+			Decr(i);
 		}
 
 		if (a < 0 || b < 0) return -1;
