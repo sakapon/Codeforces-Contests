@@ -12,13 +12,11 @@ class A
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var k = int.Parse(Console.ReadLine());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var g = Gcd(k, 100);
+		return 100 / g;
 	}
+
+	static int Gcd(int a, int b) { for (int r; (r = a % b) > 0; a = b, b = r) ; return b; }
 }

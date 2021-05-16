@@ -13,12 +13,11 @@ class B
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		if (a.Select((x, i) => x == i + 1).All(b => b)) return 0;
+		if (a[0] == 1 || a[^1] == n) return 1;
+		if (a[0] == n && a[^1] == 1) return 3;
+		return 2;
 	}
 }

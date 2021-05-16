@@ -12,13 +12,70 @@ class C
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var (n, m) = Read2();
+		var xs = Read();
+		var lrs = Console.ReadLine().Split();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var ps = Enumerable.Range(0, n).Select(i => (i, x: xs[i], isL: lrs[i][0] == 'L')).OrderBy(_ => _.x).ToArray();
+		var r = Array.ConvertAll(new int[n], _ => -1);
+
+		ForParity(ps.Where(_ => _.x % 2 == 0).ToArray(), m, r);
+		ForParity(ps.Where(_ => _.x % 2 == 1).ToArray(), m, r);
+
+		return string.Join(" ", r);
+	}
+
+	static void ForParity((int i, int x, bool isL)[] ps, int m, int[] r)
+	{
+		var q = new Stack<(int i, int x, bool isL)>();
+
+		foreach (var p in ps)
+		{
+			var (i, x, isL) = p;
+
+			if (q.Count == 0 || !isL)
+			{
+				q.Push(p);
+			}
+			else
+			{
+				var (j, x0, isL2) = q.Pop();
+				if (isL2)
+				{
+					// LL
+					var t = (x + x0) / 2;
+					r[i] = t;
+					r[j] = t;
+				}
+				else
+				{
+					// RL
+					var t = (x - x0) / 2;
+					r[i] = t;
+					r[j] = t;
+				}
+			}
+		}
+
+		while (q.Count >= 2)
+		{
+			var (j, x2, _) = q.Pop();
+			var (i1, x1, isL1) = q.Pop();
+
+			if (isL1)
+			{
+				// LR
+				var t = m - (x2 + x1) / 2 + x1;
+				r[i1] = t;
+				r[j] = t;
+			}
+			else
+			{
+				// RR
+				var t = m - (x2 + x1) / 2;
+				r[i1] = t;
+				r[j] = t;
+			}
+		}
 	}
 }
