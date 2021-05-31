@@ -5,20 +5,25 @@ using System.Linq;
 class B
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
 		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
 		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var r = new List<string>();
+
+		for (int k = 0; k < n / 2; k++)
+		{
+			var ij = $"{2 * k + 1} {2 * k + 2}";
+			r.Add("1 " + ij);
+			r.Add("1 " + ij);
+			r.Add("2 " + ij);
+			r.Add("1 " + ij);
+			r.Add("1 " + ij);
+			r.Add("2 " + ij);
+		}
+
+		return $"{r.Count}\n" + string.Join("\n", r);
 	}
 }

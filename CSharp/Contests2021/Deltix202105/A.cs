@@ -1,24 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 class A
 {
 	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
 	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
-	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var (n, m) = Read2();
+		var s = Console.ReadLine().ToCharArray();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		var t = s.ToArray();
+		var next = true;
+
+		for (int k = 0; k < m && next; k++)
+		{
+			next = false;
+
+			for (int i = 0; i < n; i++)
+			{
+				if (s[i] == '1')
+				{
+					t[i] = '1';
+				}
+				else if ((i - 1 >= 0 && s[i - 1] == '1') ^ (i + 1 < n && s[i + 1] == '1'))
+				{
+					t[i] = '1';
+					next = true;
+				}
+			}
+
+			(s, t) = (t, s);
+		}
+		return new string(s);
 	}
 }
