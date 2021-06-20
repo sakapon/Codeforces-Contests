@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 class C
 {
-	static int[] Read() => Array.ConvertAll(Console.ReadLine().Split(), int.Parse);
-	static (int, int) Read2() { var a = Read(); return (a[0], a[1]); }
 	static long[] ReadL() => Array.ConvertAll(Console.ReadLine().Split(), long.Parse);
-	//static void Main() => Console.WriteLine(Solve());
-	//static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve() ? "YES" : "NO")));
-	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
+	static (long, long, long) Read3L() { var a = ReadL(); return (a[0], a[1], a[2]); }
+	static void Main() => Console.WriteLine(Solve());
 	static object Solve()
 	{
-		var n = int.Parse(Console.ReadLine());
-		var (n2, m) = Read2();
-		var s = Console.ReadLine();
-		var a = Read();
-		var ps = Array.ConvertAll(new bool[n], _ => Read());
+		var (n, k, x) = Read3L();
+		var a = ReadL();
 
-		if (n == 0) return "NO";
-		return "YES\n" + string.Join(" ", a);
+		Array.Sort(a);
+
+		var d = Enumerable.Range(0, (int)n - 1).Select(i => Math.Max(0, (a[i + 1] - a[i] - 1) / x)).ToArray();
+		Array.Sort(d);
+
+		var t = 0L;
+		var r = d.TakeWhile(v => (t += v) <= k).Count();
+		return n - r;
 	}
 }
