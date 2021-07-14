@@ -6,10 +6,9 @@ class D
 	static void Main() => Console.WriteLine(string.Join("\n", new int[int.Parse(Console.ReadLine())].Select(_ => Solve())));
 	static object Solve()
 	{
-		var s = Console.ReadLine();
+		var s = Console.ReadLine().ToCharArray();
 		var n = s.Length;
 
-		var sa = s.ToCharArray();
 		var d = s.GroupBy(c => c).ToDictionary(g => g.Key, g => g.Count());
 		var rd = Enumerable.Range(1, d.Count).ToArray();
 
@@ -19,7 +18,7 @@ class D
 		Permutation(d.Keys.ToArray(), d.Count, p =>
 		{
 			var vMap = rd.ToDictionary(i => p[i - 1]);
-			var s2 = Array.ConvertAll(sa, c => vMap[c]);
+			var s2 = Array.ConvertAll(s, c => vMap[c]);
 
 			var v = InversionNumber(n, s2);
 			if (max < v)
